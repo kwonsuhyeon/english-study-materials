@@ -1,0 +1,1048 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>문항생성 - elementary 3학년</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .title {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 24px;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .passage-section {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 30px;
+            border-left: 4px solid #667eea;
+            display: none; /* 처음에는 숨김 */
+        }
+        
+        .passage-section.show {
+            display: block; /* 퀴즈 시작 시 표시 */
+        }
+
+        .passage-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .passage-content {
+            line-height: 1.6;
+            color: #555;
+            font-size: 16px;
+        }
+        
+        .name-input {
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        
+        .name-input input {
+            padding: 15px;
+            border: 2px solid #e1e5e9;
+            border-radius: 10px;
+            font-size: 16px;
+            width: 300px;
+            text-align: center;
+        }
+        
+        .question-card {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 25px;
+            border: 1px solid #e1e5e9;
+            display: none;
+        }
+        
+        .question-card.active {
+            display: block;
+        }
+        
+        .question-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .question-number {
+            background: #667eea;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 14px;
+        }
+        
+        .difficulty-badge {
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        
+        .difficulty-low {
+            background: #d4edda;
+            color: #155724;
+        }
+        
+        .difficulty-medium {
+            background: #fff3cd;
+            color: #856404;
+        }
+        
+        .difficulty-high {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        
+        .question-text {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 20px;
+            line-height: 1.4;
+        }
+        
+        .options {
+            display: grid;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+        
+        .option {
+            background: white;
+            border: 2px solid #e1e5e9;
+            border-radius: 10px;
+            padding: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 16px;
+        }
+        
+        .option:hover {
+            border-color: #667eea;
+            background: #f0f3ff;
+        }
+        
+        .option.selected {
+            border-color: #667eea;
+            background: #667eea;
+            color: white;
+        }
+        
+        .option.correct {
+            border-color: #28a745;
+            background: #28a745;
+            color: white;
+        }
+        
+        .option.incorrect {
+            border-color: #dc3545;
+            background: #dc3545;
+            color: white;
+        }
+        
+        .explanation {
+            background: #e7f3ff;
+            border-radius: 10px;
+            padding: 15px;
+            margin-top: 15px;
+            border-left: 4px solid #007bff;
+            display: none;
+        }
+        
+        .explanation.show {
+            display: block;
+        }
+        
+        .explanation-title {
+            font-weight: bold;
+            color: #007bff;
+            margin-bottom: 8px;
+        }
+        
+        .controls {
+            text-align: center;
+            margin-top: 30px;
+        }
+        
+        .btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 25px;
+            font-size: 16px;
+            cursor: pointer;
+            margin: 0 10px;
+            transition: all 0.3s ease;
+        }
+        
+        .btn:hover {
+            background: #5a6fd8;
+            transform: translateY(-2px);
+        }
+        
+        .btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .progress {
+            background: #e1e5e9;
+            border-radius: 20px;
+            height: 8px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+        
+        .progress-bar {
+            background: #667eea;
+            height: 100%;
+            border-radius: 20px;
+            transition: width 0.3s ease;
+            width: 0%;
+        }
+        
+        .stats {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #666;
+        }
+        
+        .result-screen {
+            text-align: center;
+            display: none;
+        }
+        
+        .result-screen.show {
+            display: block;
+        }
+        
+        .score {
+            font-size: 48px;
+            font-weight: bold;
+            color: #667eea;
+            margin: 20px 0;
+        }
+        
+        .result-message {
+            font-size: 18px;
+            color: #666;
+            margin-bottom: 30px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="title">문항생성 - elementary 3학년</h1>
+        
+        <!-- 지문 섹션 -->
+        <div class="passage-section">
+            <div class="passage-title">📖 Reading Passage</div>
+            <div class="passage-content">Once upon a time, there was a big, blue ball named Earth. Earth was always spinning around in space, and it was a home for all kinds of animals and people. 
+
+One day, Earth began to feel sick. &quot;I feel so hot and heavy,&quot; it said. &quot;I need help.&quot; So, Earth asked the sun, &quot;Can you help me? It&#x27;s so hot here.&quot; But the sun answered, &quot;I can&#x27;t. I always give heat and light to everyone.&quot; 
+
+Then, Earth asked the wind, &quot;Can you help me? I feel so heavy.&quot; But the wind said, &quot;I can&#x27;t. I am busy moving the air around.&quot; 
+
+Earth was sad and didn&#x27;t know what to do. It felt hot and heavy because people were not taking good care of it. They were cutting down trees, which helps keep the air clean. They were also throwing dirty things into the rivers and oceans. This was making Earth sick.
+
+Then, a small boy came. He was different from the others. He loved to plant trees and clean up the beach. When he saw the dirty rivers, he felt angry. &quot;Why are they doing this to our Earth?&quot; he asked. He decided to change things.
+
+He started to pick up the trash and plant more trees. He also asked his friends to help. &quot;Let&#x27;s take care of our Earth,&quot; he said. &quot;It&#x27;s our home, and it&#x27;s the only one we have.&quot; His friends agreed, and they all worked together to clean up the Earth.
+
+After some time, Earth started to feel better. It said, &quot;Thank you, boy. You and your friends have made me feel better. I am not as hot and heavy now.&quot; The boy smiled and promised to always take care of Earth.
+
+This story teaches us that each one of us can make a big difference. We must remember to take care of our Earth because it is our home. Let&#x27;s not make it feel hot and heavy. Instead, let&#x27;s make it feel happy and healthy. Let&#x27;s save our Earth!</div>
+        </div>
+        
+        <!-- 시작 화면 -->
+        <div id="startScreen" class="name-input">
+            <input type="text" id="userName" placeholder="이름을 입력하세요" />
+            <button class="btn" id="startBtn" onclick="startQuiz()">퀴즈 시작</button>
+        </div>
+        
+        <!-- 퀴즈 컨테이너 -->
+        <div class="quiz-container" id="quizContainer">
+            <!-- 진행 상황 -->
+            <div class="stats">
+                <span id="currentQuestion">1</span> / <span id="totalQuestions">3</span>
+            </div>
+            <div class="progress">
+                <div class="progress-bar" id="progressBar"></div>
+            </div>
+            
+            <!-- 문제 카드들 -->
+            
+      <div class="question-card" id="question-0">
+        <div class="question-header">
+          <span class="question-number">문제 1</span>
+          <span class="difficulty-badge difficulty-low">Low</span>
+        </div>
+        <div class="question-text">What was the name of the big, blue ball?</div>
+        <div class="options">
+          <div class="option" onclick="selectOption(0, 0)">A. Earth</div><div class="option" onclick="selectOption(0, 1)">B. Sun</div><div class="option" onclick="selectOption(0, 2)">C. Moon</div><div class="option" onclick="selectOption(0, 3)">D. Wind</div>
+        </div>
+        <div class="explanation">
+          <div class="explanation-title">💡 해설</div>
+          <div>지문에서 'big, blue ball'은 Earth를 가리킵니다. 다른 선택지들은 지문에 언급되지 않았습니다.<br><br>📊 <strong>예상 정답률:</strong> 70-80%</div>
+        </div>
+      </div>
+    
+      <div class="question-card" id="question-1">
+        <div class="question-header">
+          <span class="question-number">문제 2</span>
+          <span class="difficulty-badge difficulty-medium">Medium</span>
+        </div>
+        <div class="question-text">Why did Earth feel sick?</div>
+        <div class="options">
+          <div class="option" onclick="selectOption(1, 0)">A. People were taking care of it.</div><div class="option" onclick="selectOption(1, 1)">B. People were cutting down trees and polluting.</div><div class="option" onclick="selectOption(1, 2)">C. The sun was too bright.</div><div class="option" onclick="selectOption(1, 3)">D. The wind was too strong.</div>
+        </div>
+        <div class="explanation">
+          <div class="explanation-title">💡 해설</div>
+          <div>지문에 따르면 Earth는 사람들이 나무를 베고 더러운 것을 강과 바다에 버리는 등 잘 돌보지 않아서 아팠습니다.<br><br>📊 <strong>예상 정답률:</strong> 60-70%</div>
+        </div>
+      </div>
+    
+      <div class="question-card" id="question-2">
+        <div class="question-header">
+          <span class="question-number">문제 3</span>
+          <span class="difficulty-badge difficulty-high">High</span>
+        </div>
+        <div class="question-text">What did the small boy do to help Earth?</div>
+        <div class="options">
+          <div class="option" onclick="selectOption(2, 0)">A. Cut down trees</div><div class="option" onclick="selectOption(2, 1)">B. Pick up trash and plant trees</div><div class="option" onclick="selectOption(2, 2)">C. Turn off the sun</div><div class="option" onclick="selectOption(2, 3)">D. Make a new ball</div>
+        </div>
+        <div class="explanation">
+          <div class="explanation-title">💡 해설</div>
+          <div>소년은 쓰레기를 줍고 나무를 심어 Earth를 도왔습니다. 다른 선택지는 지문에 맞지 않습니다.<br><br>📊 <strong>예상 정답률:</strong> 60-70%</div>
+        </div>
+      </div>
+    
+            
+            <!-- 컨트롤 버튼 -->
+            <div class="controls">
+                <button class="btn" id="prevBtn" onclick="previousQuestion()" disabled>이전</button>
+                <button class="btn" id="nextBtn" onclick="nextQuestion()">다음</button>
+                <button class="btn" id="submitBtn" onclick="submitAnswer()" style="display:none;">제출</button>
+                <button class="btn" id="nextQuestionBtn" onclick="goToNextQuestion()" style="display:none;">다음 문제로</button>
+                <button class="btn" id="finalSubmitBtn" onclick="showFinalResults()" style="display:none;">최종 결과 보기</button>
+            </div>
+        </div>
+        
+        <!-- 결과 화면 -->
+        <div class="result-screen" id="resultScreen">
+            <h2>수고하셨습니다! 🎉</h2>
+            <div class="score" id="finalScore">0/0</div>
+            <div class="result-message" id="resultMessage"></div>
+            <button class="btn" onclick="restartQuiz()">다시 시작</button>
+        </div>
+    </div>
+
+    <script>
+        /**
+         * 학습 로그 기록 통합 모듈
+         * 모든 학습 템플릿에서 사용할 수 있는 범용 로그 시스템
+         */
+        class LearningLogger {
+            constructor(options = {}) {
+                this.sheetId = options.sheetId || this.extractSheetId(options.sheetUrl);
+                this.webAppUrl = options.webAppUrl || 'https://script.google.com/macros/s/AKfycbx7zlKeokSY6WQdFVNRQuQIjzfNy6GXeUqWRv3k2VkvFp-GgS08PR1-ScbFv_-HLpHtRw/exec';
+                this.templateId = options.templateId || 'question-generation-quiz';
+                this.isEnabled = options.isEnabled !== false; // 기본값 true
+                this.offlineStorageKey = `learning_logs_${this.templateId}`;
+
+                // 세션 정보
+                this.sessionData = {
+                    studentName: '',
+                    sessionStartTime: null,
+                    totalLearningTime: 0,
+                    correctAnswers: 0,
+                    wrongAnswers: 0,
+                    skippedAnswers: 0,
+                    hintsUsed: false,
+                    additionalData: {},
+                    logTime: null
+                };
+
+                // 오프라인 감지
+                this.isOnline = navigator.onLine;
+                this.setupConnectionMonitoring();
+
+                // 페이지 언로드 시 로그 저장
+                this.setupAutoSave();
+            }
+
+            /**
+             * 구글 시트 URL에서 시트 ID 추출
+             */
+            extractSheetId(url) {
+                if (!url) return null;
+                const match = url.match(/\/spreadsheets\/d\/([a-zA-Z0-9-_]+)/);
+                return match ? match[1] : null;
+            }
+
+            /**
+             * 학습 세션 시작
+             */
+            startSession(studentName, additionalData = {}) {
+                this.sessionData.studentName = studentName;
+                this.sessionData.sessionStartTime = new Date();
+                this.sessionData.additionalData = { ...additionalData };
+
+                console.log(`📚 학습 세션 시작: ${studentName} (${this.templateId})`);
+            }
+
+            /**
+             * 정답 기록
+             */
+            recordCorrectAnswer() {
+                this.sessionData.correctAnswers++;
+            }
+
+            /**
+             * 오답 기록
+             */
+            recordWrongAnswer() {
+                this.sessionData.wrongAnswers++;
+            }
+
+            /**
+             * 스킵 기록
+             */
+            recordSkippedAnswer() {
+                this.sessionData.skippedAnswers++;
+            }
+
+            /**
+             * 힌트 사용 기록
+             */
+            recordHintUsed() {
+                this.sessionData.hintsUsed = true;
+            }
+
+            /**
+             * 추가 데이터 설정
+             */
+            setAdditionalData(key, value) {
+                this.sessionData.additionalData[key] = value;
+            }
+
+            /**
+             * 학습 시간 계산
+             */
+            calculateLearningTime() {
+                if (!this.sessionData.sessionStartTime) return 0;
+                const endTime = new Date();
+                return Math.round((endTime - this.sessionData.sessionStartTime) / 1000); // 초 단위
+            }
+
+            /**
+             * 정오답 정보 생성
+             */
+            generateAnswerInfo() {
+                const { correctAnswers, wrongAnswers, skippedAnswers } = this.sessionData;
+                return `정답:${correctAnswers}, 오답:${wrongAnswers}, 스킵:${skippedAnswers}`;
+            }
+
+            /**
+             * 학습 세션 종료 및 로그 저장
+             */
+            async endSession(additionalSessionData = {}) {
+                if (!this.isEnabled) {
+                    console.log('📝 로그 기록이 비활성화되어 있습니다.');
+                    return { success: true, message: '로그 기록 비활성화' };
+                }
+
+                if (!this.sessionData.studentName || !this.sessionData.sessionStartTime) {
+                    console.warn('⚠️ 세션이 시작되지 않았습니다.');
+                    return { success: false, error: '세션이 시작되지 않았습니다.' };
+                }
+
+                // 최종 데이터 준비
+                this.sessionData.totalLearningTime = this.calculateLearningTime();
+                this.sessionData.logTime = new Date();
+                this.sessionData.additionalData = {
+                    ...this.sessionData.additionalData,
+                    ...additionalSessionData
+                };
+
+                const logData = this.formatLogData();
+
+                try {
+                    if (this.isOnline) {
+                        // 온라인 상태: 즉시 전송
+                        const result = await this.sendToGoogleSheet(logData);
+
+                        // 성공 시 오프라인 로그도 전송 시도
+                        if (result.success) {
+                            await this.sendOfflineLogs();
+                        }
+
+                        return result;
+                    } else {
+                        // 오프라인 상태: 로컬 저장
+                        this.saveOfflineLog(logData);
+                        return {
+                            success: true,
+                            message: '오프라인 상태입니다. 로그가 임시 저장되었습니다.',
+                            isOffline: true
+                        };
+                    }
+                } catch (error) {
+                    console.error('❌ 로그 저장 실패:', error);
+                    this.saveOfflineLog(logData);
+                    return {
+                        success: false,
+                        error: error.message,
+                        isOffline: true
+                    };
+                }
+            }
+
+            /**
+             * 로그 데이터 포맷팅 (스프레드시트 컬럼 구조에 맞춤)
+             */
+            formatLogData() {
+                const totalSeconds = this.sessionData.totalLearningTime;
+                const minutes = Math.floor(totalSeconds / 60);
+                const seconds = totalSeconds % 60;
+                const formattedTime = `${minutes}분 ${seconds}초`;
+
+                return {
+                    기능명: this.templateId,
+                    학생이름: this.sessionData.studentName,
+                    접속시간: this.sessionData.sessionStartTime.toLocaleString('ko-KR'),
+                    학습시간: formattedTime,
+                    정오답정보: this.generateAnswerInfo(),
+                    힌트사용여부: this.sessionData.hintsUsed,
+                    부가정보: JSON.stringify(this.sessionData.additionalData),
+                    기록시간: this.sessionData.logTime.toLocaleString('ko-KR')
+                };
+            }
+
+            /**
+             * 구글 시트로 데이터 전송
+             */
+            async sendToGoogleSheet(logData) {
+                try {
+                    if (!this.sheetId) {
+                        throw new Error('구글 시트 ID가 설정되지 않았습니다.');
+                    }
+
+                    const form = new URLSearchParams();
+                    form.append('sheetId', this.sheetId);
+                    form.append('menu', 'learning_log');
+
+                    // 로그 데이터 추가
+                    Object.entries(logData).forEach(([key, value]) => {
+                        form.append(key, value);
+                    });
+
+                    console.log('📤 구글 시트로 로그 전송:', logData);
+
+                    const response = await fetch(this.webAppUrl, {
+                        method: 'POST',
+                        mode: 'no-cors',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded',
+                        },
+                        body: form.toString()
+                    });
+
+                    console.log('✅ 로그 전송 완료');
+                    return { success: true, message: '로그가 구글 시트에 저장되었습니다.' };
+
+                } catch (error) {
+                    console.error('❌ 구글 시트 전송 실패:', error);
+                    throw error;
+                }
+            }
+
+            /**
+             * 오프라인 로그 저장
+             */
+            saveOfflineLog(logData) {
+                try {
+                    const existingLogs = JSON.parse(localStorage.getItem(this.offlineStorageKey) || '[]');
+                    existingLogs.push({
+                        ...logData,
+                        savedAt: new Date().toISOString(),
+                        id: Date.now() + Math.random()
+                    });
+
+                    localStorage.setItem(this.offlineStorageKey, JSON.stringify(existingLogs));
+                    console.log('💾 오프라인 로그 저장됨:', logData.기능명);
+                } catch (error) {
+                    console.error('❌ 오프라인 로그 저장 실패:', error);
+                }
+            }
+
+            /**
+             * 저장된 오프라인 로그 전송
+             */
+            async sendOfflineLogs() {
+                try {
+                    const offlineLogs = JSON.parse(localStorage.getItem(this.offlineStorageKey) || '[]');
+
+                    if (offlineLogs.length === 0) {
+                        return { success: true, message: '전송할 오프라인 로그가 없습니다.' };
+                    }
+
+                    console.log(`📡 ${offlineLogs.length}개의 오프라인 로그 전송 시작`);
+
+                    let successCount = 0;
+                    for (const log of offlineLogs) {
+                        try {
+                            await this.sendToGoogleSheet(log);
+                            successCount++;
+                        } catch (error) {
+                            console.error('❌ 오프라인 로그 전송 실패:', error);
+                            break; // 실패 시 중단
+                        }
+                    }
+
+                    if (successCount === offlineLogs.length) {
+                        // 모든 로그 전송 성공
+                        localStorage.removeItem(this.offlineStorageKey);
+                        console.log('✅ 모든 오프라인 로그 전송 완료');
+                        return { success: true, message: `${successCount}개의 오프라인 로그가 전송되었습니다.` };
+                    } else {
+                        // 일부만 성공
+                        const remainingLogs = offlineLogs.slice(successCount);
+                        localStorage.setItem(this.offlineStorageKey, JSON.stringify(remainingLogs));
+                        return {
+                            success: false,
+                            message: `${successCount}개 전송됨, ${remainingLogs.length}개 남음`
+                        };
+                    }
+
+                } catch (error) {
+                    console.error('❌ 오프라인 로그 전송 오류:', error);
+                    return { success: false, error: error.message };
+                }
+            }
+
+            /**
+             * 네트워크 연결 상태 모니터링
+             */
+            setupConnectionMonitoring() {
+                window.addEventListener('online', () => {
+                    console.log('🌐 온라인 상태로 전환');
+                    this.isOnline = true;
+                    this.sendOfflineLogs(); // 자동으로 오프라인 로그 전송
+                });
+
+                window.addEventListener('offline', () => {
+                    console.log('📵 오프라인 상태로 전환');
+                    this.isOnline = false;
+                });
+            }
+
+            /**
+             * 페이지 언로드 시 자동 저장 설정
+             */
+            setupAutoSave() {
+                window.addEventListener('beforeunload', () => {
+                    // 세션이 진행 중이면 현재 상태로 로그 저장
+                    if (this.sessionData.sessionStartTime && !this.sessionData.logTime) {
+                        const logData = this.formatLogData();
+                        logData.부가정보 = JSON.stringify({
+                            ...this.sessionData.additionalData,
+                            autoSaved: true,
+                            reason: 'page_unload'
+                        });
+                        this.saveOfflineLog(logData);
+                    }
+                });
+            }
+
+            /**
+             * 로그 기능 활성화/비활성화
+             */
+            setEnabled(enabled) {
+                this.isEnabled = enabled;
+                console.log(`📝 로그 기록 ${enabled ? '활성화' : '비활성화'}`);
+            }
+
+            /**
+             * 저장된 오프라인 로그 개수 확인
+             */
+            getOfflineLogCount() {
+                try {
+                    const logs = JSON.parse(localStorage.getItem(this.offlineStorageKey) || '[]');
+                    return logs.length;
+                } catch {
+                    return 0;
+                }
+            }
+
+            /**
+             * 세션 초기화
+             */
+            resetSession() {
+                this.sessionData = {
+                    studentName: '',
+                    sessionStartTime: null,
+                    totalLearningTime: 0,
+                    correctAnswers: 0,
+                    wrongAnswers: 0,
+                    skippedAnswers: 0,
+                    hintsUsed: false,
+                    additionalData: {},
+                    logTime: null
+                };
+            }
+        }
+
+        // 퀴즈 데이터
+        const questions = [{"question":"What was the name of the big, blue ball?","options":["Earth","Sun","Moon","Wind"],"correctIndex":0,"explanation":"지문에서 'big, blue ball'은 Earth를 가리킵니다. 다른 선택지들은 지문에 언급되지 않았습니다.","difficulty":"Low"},{"question":"Why did Earth feel sick?","options":["People were taking care of it.","People were cutting down trees and polluting.","The sun was too bright.","The wind was too strong."],"correctIndex":1,"explanation":"지문에 따르면 Earth는 사람들이 나무를 베고 더러운 것을 강과 바다에 버리는 등 잘 돌보지 않아서 아팠습니다.","difficulty":"Medium"},{"question":"What did the small boy do to help Earth?","options":["Cut down trees","Pick up trash and plant trees","Turn off the sun","Make a new ball"],"correctIndex":1,"explanation":"소년은 쓰레기를 줍고 나무를 심어 Earth를 도왔습니다. 다른 선택지는 지문에 맞지 않습니다.","difficulty":"High"}];
+        
+        let currentQuestionIndex = 0;
+        let userAnswers = [];
+        let startTime = new Date();
+        let questionStartTime = new Date();
+        
+        // 학습 로거 초기화
+        const logger = new LearningLogger({
+            sheetUrl: 'https://docs.google.com/spreadsheets/d/1cdlLcI6MeTlPDUbyjoZ5KLXPQGgZ6PIfkgWiXJNYlqc/edit?usp=sharing',
+            templateId: 'question-generation-quiz'
+        });
+        
+        function initQuiz() {
+            document.getElementById('totalQuestions').textContent = questions.length;
+            showQuestion(0);
+            
+            // 로그 시작
+            const userName = document.getElementById('userName').value || '익명';
+            logger.startSession(userName, {
+                activityType: 'question-generation-quiz',
+                schoolLevel: 'elementary',
+                grade: '3',
+                totalQuestions: questions.length,
+                passageId: 'question_20250820_2313_elementary_3',
+                passagePreview: 'Once upon a time, there was a big, blue ball named...',
+                questionsCount: questions.length
+            });
+        }
+        
+        function showQuestion(index) {
+            // 모든 문제 카드 숨기기
+            document.querySelectorAll('.question-card').forEach(card => {
+                card.classList.remove('active');
+            });
+            
+            // 현재 문제 카드 보이기
+            const currentCard = document.getElementById(`question-${index}`);
+            if (currentCard) {
+                currentCard.classList.add('active');
+            }
+            
+            // 진행상황 업데이트
+            document.getElementById('currentQuestion').textContent = index + 1;
+            const progress = ((index + 1) / questions.length) * 100;
+            document.getElementById('progressBar').style.width = progress + '%';
+            
+            // 버튼 상태 업데이트
+            document.getElementById('prevBtn').disabled = index === 0;
+            document.getElementById('nextBtn').style.display = index === questions.length - 1 ? 'none' : 'inline-block';
+            document.getElementById('submitBtn').style.display = index === questions.length - 1 ? 'inline-block' : 'none';
+            document.getElementById('nextQuestionBtn').style.display = 'none';
+            document.getElementById('finalSubmitBtn').style.display = 'none';
+            
+            // 선택지 다시 활성화 (이전 문제로 돌아갈 때)
+            const options = document.querySelectorAll(`#question-${index} .option`);
+            options.forEach(option => {
+                option.style.pointerEvents = 'auto';
+            });
+            
+            questionStartTime = new Date();
+        }
+        
+        function selectOption(questionIndex, optionIndex) {
+            const options = document.querySelectorAll(`#question-${questionIndex} .option`);
+            options.forEach((option, idx) => {
+                option.classList.remove('selected');
+                if (idx === optionIndex) {
+                    option.classList.add('selected');
+                }
+            });
+            
+            userAnswers[questionIndex] = optionIndex;
+        }
+        
+        function nextQuestion() {
+            const userAnswer = userAnswers[currentQuestionIndex];
+            if (userAnswer === undefined) {
+                alert('답을 선택해주세요!');
+                return;
+            }
+            
+            // 현재 문제 채점 및 해설 표시
+            showQuestionResult(currentQuestionIndex);
+        }
+        
+        function showQuestionResult(questionIndex) {
+            const question = questions[questionIndex];
+            const userAnswer = userAnswers[questionIndex];
+            const isCorrect = userAnswer === question.correctIndex;
+            
+            console.log(`🔍 문제 ${questionIndex + 1} 채점:`, {
+                questionIndex,
+                userAnswer,
+                correctIndex: question.correctIndex,
+                isCorrect,
+                questionData: question
+            });
+            
+            // 현재 문제의 선택지에 정답/오답 표시
+            const options = document.querySelectorAll(`#question-${questionIndex} .option`);
+            options.forEach((option, optionIndex) => {
+                console.log(`선택지 ${optionIndex}:`, {
+                    optionIndex,
+                    isCorrectAnswer: optionIndex === question.correctIndex,
+                    isUserAnswer: optionIndex === userAnswer,
+                    willBeMarkedCorrect: optionIndex === question.correctIndex,
+                    willBeMarkedIncorrect: optionIndex === userAnswer && !isCorrect
+                });
+                
+                if (optionIndex === question.correctIndex) {
+                    option.classList.add('correct');
+                } else if (optionIndex === userAnswer && !isCorrect) {
+                    option.classList.add('incorrect');
+                }
+                option.style.pointerEvents = 'none'; // 클릭 비활성화
+            });
+            
+            // 해설 표시
+            const explanation = document.querySelector(`#question-${questionIndex} .explanation`);
+            if (explanation) {
+                explanation.classList.add('show');
+            }
+            
+            // 정답/오답 기록
+            if (isCorrect) {
+                logger.recordCorrectAnswer();
+            } else {
+                logger.recordWrongAnswer();
+            }
+            
+            // 버튼 상태 변경
+            document.getElementById('nextBtn').style.display = 'none';
+            document.getElementById('submitBtn').style.display = 'none';
+            
+            if (questionIndex < questions.length - 1) {
+                document.getElementById('nextQuestionBtn').style.display = 'inline-block';
+            } else {
+                document.getElementById('finalSubmitBtn').style.display = 'inline-block';
+            }
+        }
+        
+        function goToNextQuestion() {
+            if (currentQuestionIndex < questions.length - 1) {
+                currentQuestionIndex++;
+                showQuestion(currentQuestionIndex);
+                
+                // 버튼 상태 초기화
+                document.getElementById('nextQuestionBtn').style.display = 'none';
+                document.getElementById('nextBtn').style.display = 'inline-block';
+            }
+        }
+        
+        function previousQuestion() {
+            if (currentQuestionIndex > 0) {
+                currentQuestionIndex--;
+                showQuestion(currentQuestionIndex);
+            }
+        }
+        
+        function logCurrentAnswer() {
+            const question = questions[currentQuestionIndex];
+            const userAnswer = userAnswers[currentQuestionIndex];
+            const isCorrect = userAnswer === question.correctIndex;
+            const timeTaken = (new Date() - questionStartTime) / 1000;
+            
+            // 정답/오답 기록
+            if (isCorrect) {
+                logger.recordCorrectAnswer();
+            } else {
+                logger.recordWrongAnswer();
+            }
+            
+            // 추가 데이터 기록
+            logger.setAdditionalData(`question_${currentQuestionIndex + 1}`, {
+                question: question.question,
+                userAnswer: userAnswer !== undefined ? question.options[userAnswer] : '무응답',
+                correctAnswer: question.options[question.correctIndex],
+                isCorrect: isCorrect,
+                timeTaken: timeTaken,
+                difficulty: question.difficulty
+            });
+        }
+        
+        function submitAnswer() {
+            const userAnswer = userAnswers[currentQuestionIndex];
+            if (userAnswer === undefined) {
+                alert('답을 선택해주세요!');
+                return;
+            }
+            
+            // 마지막 문제 채점 및 해설 표시
+            showQuestionResult(currentQuestionIndex);
+        }
+        
+        function showFinalResults() {
+            // 모든 문제 완료 후 최종 결과 표시
+            showResults();
+        }
+        
+        function showResults() {
+            // 모든 문제에 대한 정답 표시
+            questions.forEach((question, questionIndex) => {
+                const userAnswer = userAnswers[questionIndex];
+                const options = document.querySelectorAll(`#question-${questionIndex} .option`);
+                
+                options.forEach((option, optionIndex) => {
+                    if (optionIndex === question.correctIndex) {
+                        option.classList.add('correct');
+                    } else if (optionIndex === userAnswer && userAnswer !== question.correctIndex) {
+                        option.classList.add('incorrect');
+                    }
+                });
+                
+                // 해설 표시
+                const explanation = document.querySelector(`#question-${questionIndex} .explanation`);
+                if (explanation) {
+                    explanation.classList.add('show');
+                }
+            });
+            
+            // 점수 계산
+            const correctCount = userAnswers.reduce((count, answer, index) => {
+                return count + (answer === questions[index].correctIndex ? 1 : 0);
+            }, 0);
+            
+            const percentage = Math.round((correctCount / questions.length) * 100);
+            
+            // 결과 화면 표시
+            document.getElementById('finalScore').textContent = `${correctCount}/${questions.length}`;
+            document.getElementById('resultMessage').textContent = `정답률: ${percentage}%`;
+            
+            document.querySelector('.controls').style.display = 'none';
+            document.getElementById('resultScreen').classList.add('show');
+            
+            // 학습 완료 로그
+            logger.endSession({
+                totalScore: correctCount,
+                maxScore: questions.length,
+                percentage: percentage,
+                totalTime: (new Date() - startTime) / 1000
+            }).then(result => {
+                if (result.success) {
+                    console.log('학습 결과가 성공적으로 저장되었습니다.');
+                } else {
+                    console.warn('학습 결과 저장 실패:', result.error);
+                }
+            }).catch(error => {
+                console.error('학습 결과 저장 중 오류:', error);
+            });
+        }
+        
+        function restartQuiz() {
+            currentQuestionIndex = 0;
+            userAnswers = [];
+            startTime = new Date();
+            
+            // 모든 선택 초기화
+            document.querySelectorAll('.option').forEach(option => {
+                option.classList.remove('selected', 'correct', 'incorrect');
+            });
+            
+            // 해설 숨기기
+            document.querySelectorAll('.explanation').forEach(explanation => {
+                explanation.classList.remove('show');
+            });
+            
+            document.querySelector('.controls').style.display = 'block';
+            document.getElementById('resultScreen').classList.remove('show');
+            
+            showQuestion(0);
+            initQuiz();
+        }
+        
+        // 이름 입력 후 Enter 키로 시작
+        document.getElementById('userName').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                initQuiz();
+            }
+        });
+        
+        // startQuiz 함수 추가 - 시작 화면에서 실제 퀴즈로 전환
+        function startQuiz() {
+            const userName = document.getElementById('userName').value?.trim();
+            if (!userName) {
+                alert('이름을 입력해주세요!');
+                return;
+            }
+            
+            // 시작 화면 숨기고 퀴즈 화면 표시
+            document.getElementById('startScreen').style.display = 'none';
+            
+            const quizContainer = document.querySelector('.quiz-container');
+            const passageSection = document.querySelector('.passage-section');
+            
+            if (quizContainer) {
+                quizContainer.style.display = 'block';
+            }
+            if (passageSection) {
+                passageSection.classList.add('show');
+            }
+            
+            // 퀴즈 초기화
+            initQuiz();
+        }
+        
+        // 페이지 로드 시 시작 화면만 표시
+        window.onload = function() {
+            const quizContainer = document.querySelector('.quiz-container');
+            if (quizContainer) {
+                quizContainer.style.display = 'none';
+            }
+        };
+        
+    </script>
+</body>
+</html>
