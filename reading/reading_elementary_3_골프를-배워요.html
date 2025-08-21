@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>영어 지문 학습 워크시트</title>
+    <style>
+        /* 전체 레이아웃 및 폰트 설정 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, 'Nanum Gothic', sans-serif;
+            line-height: 1.8; /* 가독성을 위한 줄 간격 확장 */
+            color: #444; /* 본문 색상을 약간 부드럽게 */
+            background: #fff8f2; /* 종이 질감을 위한 부드러운 배경색 */
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .worksheet-container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: #fdfbf7; /* 하얀 종이 배경 */
+            border-radius: 12px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.05); /* 은은한 그림자 효과 */
+            overflow: hidden;
+            border: 1px solid #e0e0e0; /* 얇은 테두리 */
+        }
+
+        /* 헤더 섹션 - 노트 탭 같은 느낌으로 수정 */
+        .header {
+            background: #d4e6f1; /* 차분한 파스텔 블루 */
+            color: #2c3e50; /* 헤더 글자색 */
+            padding: 30px 30px 20px;
+            text-align: center;
+            position: relative;
+            border-bottom: 2px dashed #aeb6bf; /* 점선 테두리 추가 */
+        }
+
+        .header h1 {
+            font-size: 2.2em;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .header .meta-info {
+            display: flex;
+            justify-content: center;
+            gap: 25px;
+            margin-top: 15px;
+            flex-wrap: wrap;
+            font-size: 0.9em;
+        }
+
+        .meta-item {
+            background: rgba(255,255,255,0.7);
+            backdrop-filter: blur(5px);
+            padding: 6px 14px;
+            border-radius: 15px;
+            font-weight: 500;
+            border: 1px solid rgba(255,255,255,0.8);
+            color: #4a698a;
+        }
+
+        /* 콘텐츠 섹션 */
+        .content {
+            padding: 40px 50px;
+        }
+
+        .section {
+            margin-bottom: 50px;
+        }
+
+        .section-title {
+            font-size: 1.6em;
+            color: #34495e; /* 차분한 제목 색상 */
+            margin-bottom: 25px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e5e5e5;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            font-weight: 700;
+        }
+
+        .section-icon {
+            width: 35px;
+            height: 35px;
+            background: #4a90e2; /* 아이콘 색상 변경 */
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+
+        .passage-text {
+            background: #fdfbf7;
+            border-left: 5px solid #aeb6bf; /* 부드러운 색상으로 변경 */
+            padding: 30px;
+            border-radius: 8px;
+            font-size: 1.1em;
+            line-height: 1.9;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        /* 분석 카드 */
+        .analysis-grid {
+            /* 한 줄에 표현되도록 flexbox로 변경 */
+            display: flex;
+            flex-wrap: nowrap; /* 줄바꿈 방지 */
+            justify-content: space-between; /* 카드 사이 간격 균등 분배 */
+            gap: 15px; /* 카드 사이 간격 */
+            margin-bottom: 35px;
+        }
+
+        .analysis-card {
+            background: #fdfbf7;
+            padding: 25px;
+            border-radius: 10px;
+            border: 1px solid #e0e0e0;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            flex-shrink: 0; /* 카드 축소 방지 */
+            flex-grow: 1; /* 카드 확장 허용 */
+            flex-basis: 0; /* 기본 크기를 0으로 설정하여 flex-grow가 작동하도록 함 */
+        }
+
+        .analysis-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+        }
+
+        .analysis-number {
+            font-size: 2.5em;
+            font-weight: 700;
+            color: #4a698a; /* 부드러운 색상으로 변경 */
+            margin-bottom: 5px;
+        }
+
+        .analysis-label {
+            color: #666;
+            font-size: 0.9em;
+        }
+
+        /* 어휘 및 문법 섹션 */
+        .vocabulary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 15px;
+        }
+
+        .vocab-item {
+            background: #fdfbf7;
+            border: 1px solid #e5e5e5;
+            border-radius: 8px;
+            padding: 15px;
+            transition: all 0.3s ease;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.03);
+        }
+
+        .vocab-item:hover {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            transform: translateY(-2px);
+            border-color: #4a698a;
+        }
+
+        .vocab-english {
+            font-weight: 600;
+            color: #34495e;
+            font-size: 1.1em;
+            margin-bottom: 5px;
+        }
+
+        .vocab-korean {
+            color: #7f8c8d;
+            font-size: 0.95em;
+        }
+
+        .grammar-list {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .grammar-item {
+            background: #fdfbf7;
+            border-left: 4px solid #8e44ad; /* 문법은 보라색으로 포인트 */
+            margin-bottom: 15px;
+            padding: 15px 20px;
+            border-radius: 0 8px 8px 0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        .grammar-title {
+            font-weight: 700;
+            color: #8e44ad;
+            margin-bottom: 8px;
+        }
+
+        .grammar-example {
+            font-style: italic;
+            color: #555;
+            font-size: 0.9em;
+            line-height: 1.6;
+        }
+
+        .explanation-text {
+            background: #fefcf5;
+            border: 1px solid #f9e79f;
+            border-radius: 8px;
+            padding: 20px;
+            line-height: 1.7;
+            font-size: 1em;
+        }
+
+        /* 푸터 */
+        .footer {
+            background: #f0f2f5;
+            padding: 20px;
+            text-align: center;
+            color: #666;
+            font-size: 0.85em;
+            border-top: 1px solid #e5e5e5;
+        }
+
+        /* 모바일 반응형 */
+        @media (max-width: 768px) {
+            .content {
+                padding: 20px;
+            }
+            
+            .header .meta-info {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .analysis-grid {
+                flex-direction: column;
+            }
+
+            .analysis-card {
+                flex: 1 1 100%;
+            }
+            
+            .vocabulary-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="worksheet-container">
+        <div class="header">
+            <h1>📚 영어 지문 학습 워크시트</h1>
+            <div class="meta-info">
+                <div class="meta-item">📖 주제: 골프를 배워요</div>
+                <div class="meta-item">🎓 학교급: 초등 3학년</div>
+                <div class="meta-item">📅 생성일: 2025. 8. 21.</div>
+            </div>
+        </div>
+        
+        <div class="content">
+            <!-- 지문 섹션 -->
+            <div class="section">
+                <h2 class="section-title">
+                    <span class="section-icon">📖</span>
+                    영어 지문
+                </h2>
+                <div class="passage-text">
+                    On a bright afternoon, a young boy named Tom decided to learn about golf. He always had a curious heart. He asked his dad, "Can you teach me how to play golf?". His dad, a great golf player, was happy and said, "Of course, Tom! Let's begin."
+
+The next day, they went to a large green field, the golf course. It was full of people of all ages, but Tom was not scared. He was excited and ready to learn. His dad gave him a golf club. It was heavier than Tom thought, but he held it with both hands.
+
+His dad said, "Golf is not just about hitting the ball hard. It's about how you control the ball with your club. Always keep your eye on the ball and feel the air around you."
+
+Tom listened carefully and nodded. He put the small white ball on the ground. He took a deep breath, raised his club, and swung it. The ball flew across the field. It was not a big hit, but Tom was happy.
+
+Again and again, Tom swung the club. At first, he missed the ball, but he didn't get angry. He learned that golf is not easy. It's a game of patience and control. He felt a sense of joy and satisfaction each time he hit the ball.
+
+In the end, Tom enjoyed his golf lesson. His body was tired but his heart was full of happiness. He thanked his dad and said, "I had so much fun today! I can't wait to play golf again."
+
+From that day, Tom practiced golf every afternoon. He learned that golf is not just a game, but also an art. An art of patience, control, and joy. He knew he was not the best, but he was getting better every day. And that's what made golf so much fun for Tom.
+                </div>
+            </div>
+            
+            <!-- 지문 분석 섹션 -->
+            <div class="section">
+                <h2 class="section-title">
+                    <span class="section-icon">📊</span>
+                    지문 분석
+                </h2>
+                <div class="analysis-grid">
+                    <div class="analysis-card">
+                        <div class="analysis-number">306</div>
+                        <div class="analysis-label">총 단어 수</div>
+                    </div>
+                    <div class="analysis-card">
+                        <div class="analysis-number">30.5%</div>
+                        <div class="analysis-label">학교급 어휘 사용률</div>
+                    </div>
+                    <div class="analysis-card">
+                        <div class="analysis-number">61</div>
+                        <div class="analysis-label">사용된 핵심 어휘</div>
+                    </div>
+                    <div class="analysis-card">
+                        <div class="analysis-number">18</div>
+                        <div class="analysis-label">문장 수</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 핵심 단어 섹션 -->
+            <div class="section">
+                <h2 class="section-title">
+                    <span class="section-icon">💎</span>
+                    핵심 어휘
+                </h2>
+                <div class="vocabulary-grid">
+                    
+    <div class="vocab-item">
+      <div class="vocab-english">he</div>
+      <div class="vocab-korean">그</div>
+    </div>
+  
+    <div class="vocab-item">
+      <div class="vocab-english">again</div>
+      <div class="vocab-korean">다시</div>
+    </div>
+  
+    <div class="vocab-item">
+      <div class="vocab-english">across</div>
+      <div class="vocab-korean">가로질러</div>
+    </div>
+  
+    <div class="vocab-item">
+      <div class="vocab-english">air</div>
+      <div class="vocab-korean">공기</div>
+    </div>
+  
+    <div class="vocab-item">
+      <div class="vocab-english">every</div>
+      <div class="vocab-korean">모든</div>
+    </div>
+  
+    <div class="vocab-item">
+      <div class="vocab-english">after</div>
+      <div class="vocab-korean">~후에</div>
+    </div>
+  
+    <div class="vocab-item">
+      <div class="vocab-english">i</div>
+      <div class="vocab-korean">나</div>
+    </div>
+  
+    <div class="vocab-item">
+      <div class="vocab-english">heart</div>
+      <div class="vocab-korean">마음</div>
+    </div>
+  
+    <div class="vocab-item">
+      <div class="vocab-english">afternoon</div>
+      <div class="vocab-korean">오후</div>
+    </div>
+  
+    <div class="vocab-item">
+      <div class="vocab-english">deep</div>
+      <div class="vocab-korean">깊은</div>
+    </div>
+  
+    <div class="vocab-item">
+      <div class="vocab-english">from</div>
+      <div class="vocab-korean">~로부터</div>
+    </div>
+  
+    <div class="vocab-item">
+      <div class="vocab-english">ear</div>
+      <div class="vocab-korean">귀</div>
+    </div>
+  
+                </div>
+            </div>
+            
+            <!-- 핵심 문법 섹션 -->
+            <div class="section">
+                <h2 class="section-title">
+                    <span class="section-icon">⚡</span>
+                    핵심 문법 포인트
+                </h2>
+                <ul class="grammar-list">
+                    
+    <li class="grammar-item">
+      <div class="grammar-title">Simple Past Tense</div>
+      <div class="grammar-example">On a bright afternoon, a young boy named Tom decided to learn about golf. This sentence shows the use of simple past tense, which is used to talk about finished actions or states in the past.</div>
+    </li>
+  
+    <li class="grammar-item">
+      <div class="grammar-title">Direct Speech</div>
+      <div class="grammar-example">He asked his dad, 'Can you teach me how to play golf?'. This sentence shows the use of direct speech, where the exact words of the speaker are quoted.</div>
+    </li>
+  
+    <li class="grammar-item">
+      <div class="grammar-title">Imperative Sentences</div>
+      <div class="grammar-example">Always keep your eye on the ball and feel the air around you. This sentence is an example of an imperative sentence, which is used to give orders, instructions, or express requests.</div>
+    </li>
+  
+    <li class="grammar-item">
+      <div class="grammar-title">Comparative Adjectives</div>
+      <div class="grammar-example">He knew he was not the best, but he was getting better every day. This sentence shows the use of comparative adjectives, which are used to compare differences between the two objects they modify.</div>
+    </li>
+  
+                </ul>
+            </div>
+            
+            <!-- 해설 섹션 -->
+            <div class="section">
+                <h2 class="section-title">
+                    <span class="section-icon">💡</span>
+                    지문 해설 및 학습 포인트
+                </h2>
+                <div class="explanation-text">
+                    This passage tells the story of a young boy named Tom who decides to learn golf and finds joy in the process. The text provides examples of simple past tense, direct speech, imperative sentences, and comparative adjectives. It's a good material for learners to understand how these grammar points are used in context while also learning new vocabulary related to golf.
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>🤖 AI로 생성된 영어 학습 자료 | English Study Platform</p>
+            <p>이 워크시트는 초등 3학년 학습자를 위한 맞춤형 교육 자료입니다.</p>
+        </div>
+    </div>
+</body>
+</html>
