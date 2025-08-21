@@ -1,0 +1,1383 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>객관식 영어 단어 퀴즈</title>
+    <!-- START_USER_EDITABLE_CSS -->
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            max-width: 600px;
+            width: 100%;
+        }
+        
+        .title {
+            color: #333;
+            margin-bottom: 30px;
+            font-size: 24px;
+            font-weight: bold;
+            text-align: center;
+        }
+        
+        .name-input {
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        
+        .name-input input {
+            padding: 15px;
+            border: 2px solid #e1e5e9;
+            border-radius: 10px;
+            font-size: 16px;
+            width: 100%;
+            max-width: 300px;
+            margin-bottom: 15px;
+        }
+        
+        .progress-section {
+            margin-bottom: 20px;
+        }
+        
+        .progress-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        
+        .question-counter {
+            font-size: 14px;
+            color: #666;
+        }
+        
+        .progress {
+            background: #e1e5e9;
+            border-radius: 10px;
+            height: 8px;
+            overflow: hidden;
+        }
+        
+        .progress-bar {
+            background: linear-gradient(90deg, #4facfe 0%, #00f2fe 100%);
+            height: 100%;
+            transition: width 0.3s ease;
+        }
+        
+        .question-card {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            border-radius: 15px;
+            padding: 40px 30px;
+            margin: 30px 0;
+            color: white;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        
+        .question-title {
+            font-size: 18px;
+            margin-bottom: 20px;
+            opacity: 0.9;
+        }
+        
+        .english-word {
+            font-size: 36px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+        
+        .sound-btn {
+            background: rgba(255,255,255,0.2);
+            border: none;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            color: white;
+            cursor: pointer;
+            font-size: 24px;
+            transition: all 0.3s;
+        }
+        
+        .sound-btn:hover {
+            background: rgba(255,255,255,0.3);
+            transform: scale(1.1);
+        }
+        
+        .choices-container {
+            margin: 30px 0;
+        }
+        
+        .choice {
+            display: block;
+            width: 100%;
+            padding: 15px 20px;
+            margin: 10px 0;
+            background: white;
+            border: 2px solid #e1e5e9;
+            border-radius: 10px;
+            font-size: 16px;
+            text-align: left;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .choice:hover {
+            border-color: #4facfe;
+            background: #f8f9ff;
+        }
+        
+        .choice.selected {
+            border-color: #4facfe;
+            background: #e6f3ff;
+        }
+        
+        .choice.correct {
+            border-color: #4CAF50;
+            background: #e8f5e8;
+            color: #2e7d32;
+        }
+        
+        .choice.wrong {
+            border-color: #f44336;
+            background: #ffeaea;
+            color: #c62828;
+        }
+        
+        .choice.disabled {
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+        
+        .choice-letter {
+            font-weight: bold;
+            margin-right: 10px;
+            color: #666;
+        }
+        
+        .btn {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            min-width: 120px;
+        }
+        
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .next-btn {
+            background: #4facfe;
+            color: white;
+            width: 100%;
+            margin-top: 20px;
+        }
+        
+        .next-btn:hover:not(:disabled) {
+            background: #3b9cfe;
+            transform: translateY(-2px);
+        }
+        
+        .start-btn, .retry-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 40px;
+            font-size: 18px;
+        }
+        
+        .start-btn:hover, .retry-btn:hover {
+            transform: translateY(-2px);
+        }
+        
+        .results-screen {
+            text-align: center;
+        }
+        
+        .score {
+            font-size: 48px;
+            font-weight: bold;
+            color: #4facfe;
+            margin: 20px 0;
+        }
+        
+        .accuracy {
+            font-size: 24px;
+            color: #666;
+            margin-bottom: 30px;
+        }
+        
+        .results-list {
+            max-height: 400px;
+            overflow-y: auto;
+            margin: 30px 0;
+            text-align: left;
+        }
+        
+        .result-item {
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 10px;
+            border: 2px solid;
+        }
+        
+        .result-item.correct {
+            border-color: #4CAF50;
+            background: #e8f5e8;
+        }
+        
+        .result-item.wrong {
+            border-color: #f44336;
+            background: #ffeaea;
+        }
+        
+        .result-word {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .result-answer {
+            font-size: 14px;
+            color: #666;
+        }
+        
+        .result-correct-answer {
+            color: #4CAF50;
+            font-weight: bold;
+        }
+        
+        .result-wrong-answer {
+            color: #f44336;
+        }
+        
+        .buttons-container {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 30px;
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        
+        @keyframes slideOut {
+            from { transform: translateX(0); opacity: 1; }
+            to { transform: translateX(100%); opacity: 0; }
+        }
+        
+        @media (max-width: 480px) {
+            .container {
+                padding: 20px;
+                margin: 10px;
+            }
+            
+            .english-word {
+                font-size: 28px;
+            }
+            
+            .choice {
+                padding: 12px 15px;
+                font-size: 14px;
+            }
+            
+            .buttons-container {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .btn {
+                width: 100%;
+            }
+        }
+    </style>
+    <!-- END_USER_EDITABLE_CSS -->
+</head>
+<body>
+    <!-- START_USER_EDITABLE_HTML -->
+    <div class="container">
+        <!-- 시작 화면 -->
+        <div id="startScreen">
+            <h1 class="title">객관식 영어 단어 퀴즈</h1>
+            <p style="text-align: center; color: #666; margin-bottom: 30px;">
+                5개의 단어 문제를 풀어보세요!
+            </p>
+            <div class="name-input">
+                <input type="text" id="learnerName" placeholder="이름을 입력하세요" maxlength="20">
+                <br>
+                <button class="btn start-btn" onclick="startQuiz()">퀴즈 시작</button>
+            </div>
+        </div>
+        
+        <!-- 퀴즈 화면 -->
+        <div id="quizScreen" class="hidden">
+            <div class="progress-section">
+                <div class="progress-info">
+                    <span class="question-counter" id="questionCounter">1 / 5</span>
+                </div>
+                <div class="progress">
+                    <div class="progress-bar" id="progressBar"></div>
+                </div>
+            </div>
+            
+            <div class="question-card">
+                <div class="question-title">다음 단어의 뜻은?</div>
+                <div class="english-word" id="englishWord"></div>
+                <button class="sound-btn" onclick="playSound()">🔊</button>
+            </div>
+            
+            <div class="choices-container" id="choicesContainer">
+                <!-- 선택지들이 여기에 동적으로 생성됩니다 -->
+            </div>
+            
+            <button class="btn next-btn" id="nextBtn" onclick="nextQuestion()" disabled>
+                다음 문제
+            </button>
+        </div>
+        
+        <!-- 결과 화면 -->
+        <div id="resultsScreen" class="hidden">
+            <div class="results-screen">
+                <h2 class="title">퀴즈 완료!</h2>
+                <div class="score" id="finalScore">0 / 0</div>
+                <div class="accuracy" id="finalAccuracy">정답률: 0%</div>
+                
+                <div class="results-list" id="resultsList">
+                    <!-- 결과 목록이 여기에 동적으로 생성됩니다 -->
+                </div>
+                
+                <div class="buttons-container">
+                    <button class="btn retry-btn" onclick="restartQuiz()">다시 풀기</button>
+                </div>
+                
+                <p style="margin-top: 30px; color: #666; font-size: 14px;">
+                    학습 로그가 콘솔에 출력되었습니다.
+                </p>
+            </div>
+        </div>
+    </div>
+    <!-- END_USER_EDITABLE_HTML -->
+
+    <!-- START_CORE_SYSTEM -->
+    <!-- 학습 로그 시스템 -->
+    <script>
+        /**
+ * 학습 로그 기록 통합 모듈
+ * 모든 학습 템플릿에서 사용할 수 있는 범용 로그 시스템
+ */
+
+        class LearningLogger {
+            constructor(options = {}) {
+                this.sheetId = options.sheetId || this.extractSheetId(options.sheetUrl);
+                this.webAppUrl = options.webAppUrl || 'https://script.google.com/macros/s/AKfycbx7zlKeokSY6WQdFVNRQuQIjzfNy6GXeUqWRv3k2VkvFp-GgS08PR1-ScbFv_-HLpHtRw/exec';
+                this.templateId = options.templateId || 'unknown';
+                this.isEnabled = options.isEnabled !== false; // 기본값 true
+                this.offlineStorageKey = `learning_logs_${this.templateId}`;
+
+                // 세션 정보
+                this.sessionData = {
+                    studentName: '',
+                    sessionStartTime: null,
+                    totalLearningTime: 0,
+                    correctAnswers: 0,
+                    wrongAnswers: 0,
+                    skippedAnswers: 0,
+                    hintsUsed: false,
+                    additionalData: {},
+                    logTime: null
+                };
+
+                // 오프라인 감지
+                this.isOnline = navigator.onLine;
+                this.setupConnectionMonitoring();
+
+                // 페이지 언로드 시 로그 저장
+                this.setupAutoSave();
+            }
+
+            /**
+             * 구글 시트 URL에서 시트 ID 추출
+             */
+            extractSheetId(url) {
+                if (!url) return null;
+                const match = url.match(/\/spreadsheets\/d\/([a-zA-Z0-9-_]+)/);
+                return match ? match[1] : null;
+            }
+
+            /**
+             * 학습 세션 시작
+             */
+            startSession(studentName, additionalData = {}) {
+                this.sessionData.studentName = studentName;
+                this.sessionData.sessionStartTime = new Date();
+                this.sessionData.additionalData = { ...additionalData };
+
+                console.log(`📚 학습 세션 시작: ${studentName} (${this.templateId})`);
+            }
+
+            /**
+             * 정답 기록
+             */
+            recordCorrectAnswer() {
+                this.sessionData.correctAnswers++;
+            }
+
+            /**
+             * 오답 기록
+             */
+            recordWrongAnswer() {
+                this.sessionData.wrongAnswers++;
+            }
+
+            /**
+             * 스킵 기록
+             */
+            recordSkippedAnswer() {
+                this.sessionData.skippedAnswers++;
+            }
+
+            /**
+             * 힌트 사용 기록
+             */
+            recordHintUsed() {
+                this.sessionData.hintsUsed = true;
+            }
+
+            /**
+             * 추가 데이터 설정
+             */
+            setAdditionalData(key, value) {
+                this.sessionData.additionalData[key] = value;
+            }
+
+            /**
+             * 학습 시간 계산
+             */
+            calculateLearningTime() {
+                if (!this.sessionData.sessionStartTime) return 0;
+                const endTime = new Date();
+                return Math.round((endTime - this.sessionData.sessionStartTime) / 1000); // 초 단위
+            }
+
+            /**
+             * 정오답 정보 생성
+             */
+            generateAnswerInfo() {
+                const { correctAnswers, wrongAnswers, skippedAnswers } = this.sessionData;
+                return `정답:${correctAnswers}, 오답:${wrongAnswers}, 스킵:${skippedAnswers}`;
+            }
+
+            /**
+             * 학습 세션 종료 및 로그 저장
+             */
+            async endSession(additionalSessionData = {}) {
+                if (!this.isEnabled) {
+                    console.log('📝 로그 기록이 비활성화되어 있습니다.');
+                    return { success: true, message: '로그 기록 비활성화' };
+                }
+
+                if (!this.sessionData.studentName || !this.sessionData.sessionStartTime) {
+                    console.warn('⚠️ 세션이 시작되지 않았습니다.');
+                    return { success: false, error: '세션이 시작되지 않았습니다.' };
+                }
+
+                // 최종 데이터 준비
+                this.sessionData.totalLearningTime = this.calculateLearningTime();
+                this.sessionData.logTime = new Date();
+                this.sessionData.additionalData = {
+                    ...this.sessionData.additionalData,
+                    ...additionalSessionData
+                };
+
+                const logData = this.formatLogData();
+
+                try {
+                    if (this.isOnline) {
+                        // 온라인 상태: 즉시 전송
+                        const result = await this.sendToGoogleSheet(logData);
+
+                        // 성공 시 오프라인 로그도 전송 시도
+                        if (result.success) {
+                            await this.sendOfflineLogs();
+                        }
+
+                        return result;
+                    } else {
+                        // 오프라인 상태: 로컬 저장
+                        this.saveOfflineLog(logData);
+                        return {
+                            success: true,
+                            message: '오프라인 상태입니다. 로그가 임시 저장되었습니다.',
+                            isOffline: true
+                        };
+                    }
+                } catch (error) {
+                    console.error('❌ 로그 저장 실패:', error);
+                    this.saveOfflineLog(logData);
+                    return {
+                        success: false,
+                        error: error.message,
+                        isOffline: true
+                    };
+                }
+            }
+
+            /**
+             * 로그 데이터 포맷팅 (스프레드시트 컬럼 구조에 맞춤)
+             */
+            formatLogData() {
+                const totalSeconds = this.sessionData.totalLearningTime;
+                const minutes = Math.floor(totalSeconds / 60);
+                const seconds = totalSeconds % 60;
+                const formattedTime = `${minutes}분 ${seconds}초`;
+
+                return {
+                    기능명: this.templateId,
+                    학생이름: this.sessionData.studentName,
+                    접속시간: this.sessionData.sessionStartTime.toLocaleString('ko-KR'),
+                    학습시간: formattedTime,
+                    정오답정보: this.generateAnswerInfo(),
+                    힌트사용여부: this.sessionData.hintsUsed,
+                    부가정보: JSON.stringify(this.sessionData.additionalData),
+                    기록시간: this.sessionData.logTime.toLocaleString('ko-KR')
+                };
+            }
+
+            /**
+             * 구글 시트로 데이터 전송
+             */
+            async sendToGoogleSheet(logData) {
+                try {
+                    if (!this.sheetId) {
+                        throw new Error('구글 시트 ID가 설정되지 않았습니다.');
+                    }
+
+                    const form = new URLSearchParams();
+                    form.append('sheetId', this.sheetId);
+                    form.append('menu', 'learning_log');
+
+                    // 로그 데이터 추가
+                    Object.entries(logData).forEach(([key, value]) => {
+                        form.append(key, value);
+                    });
+
+                    console.log('📤 구글 시트로 로그 전송:', logData);
+
+                    const response = await fetch(this.webAppUrl, {
+                        method: 'POST',
+                        mode: 'no-cors',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded',
+                        },
+                        body: form.toString()
+                    });
+
+                    console.log('✅ 로그 전송 완료');
+                    return { success: true, message: '로그가 구글 시트에 저장되었습니다.' };
+
+                } catch (error) {
+                    console.error('❌ 구글 시트 전송 실패:', error);
+                    throw error;
+                }
+            }
+
+            /**
+             * 오프라인 로그 저장
+             */
+            saveOfflineLog(logData) {
+                try {
+                    const existingLogs = JSON.parse(localStorage.getItem(this.offlineStorageKey) || '[]');
+                    existingLogs.push({
+                        ...logData,
+                        savedAt: new Date().toISOString(),
+                        id: Date.now() + Math.random()
+                    });
+
+                    localStorage.setItem(this.offlineStorageKey, JSON.stringify(existingLogs));
+                    console.log('💾 오프라인 로그 저장됨:', logData.기능명);
+                } catch (error) {
+                    console.error('❌ 오프라인 로그 저장 실패:', error);
+                }
+            }
+
+            /**
+             * 저장된 오프라인 로그 전송
+             */
+            async sendOfflineLogs() {
+                try {
+                    const offlineLogs = JSON.parse(localStorage.getItem(this.offlineStorageKey) || '[]');
+
+                    if (offlineLogs.length === 0) {
+                        return { success: true, message: '전송할 오프라인 로그가 없습니다.' };
+                    }
+
+                    console.log(`📡 ${offlineLogs.length}개의 오프라인 로그 전송 시작`);
+
+                    let successCount = 0;
+                    for (const log of offlineLogs) {
+                        try {
+                            await this.sendToGoogleSheet(log);
+                            successCount++;
+                        } catch (error) {
+                            console.error('❌ 오프라인 로그 전송 실패:', error);
+                            break; // 실패 시 중단
+                        }
+                    }
+
+                    if (successCount === offlineLogs.length) {
+                        // 모든 로그 전송 성공
+                        localStorage.removeItem(this.offlineStorageKey);
+                        console.log('✅ 모든 오프라인 로그 전송 완료');
+                        return { success: true, message: `${successCount}개의 오프라인 로그가 전송되었습니다.` };
+                    } else {
+                        // 일부만 성공
+                        const remainingLogs = offlineLogs.slice(successCount);
+                        localStorage.setItem(this.offlineStorageKey, JSON.stringify(remainingLogs));
+                        return {
+                            success: false,
+                            message: `${successCount}개 전송됨, ${remainingLogs.length}개 남음`
+                        };
+                    }
+
+                } catch (error) {
+                    console.error('❌ 오프라인 로그 전송 오류:', error);
+                    return { success: false, error: error.message };
+                }
+            }
+
+            /**
+             * 네트워크 연결 상태 모니터링
+             */
+            setupConnectionMonitoring() {
+                window.addEventListener('online', () => {
+                    console.log('🌐 온라인 상태로 전환');
+                    this.isOnline = true;
+                    this.sendOfflineLogs(); // 자동으로 오프라인 로그 전송
+                });
+
+                window.addEventListener('offline', () => {
+                    console.log('📵 오프라인 상태로 전환');
+                    this.isOnline = false;
+                });
+            }
+
+            /**
+             * 페이지 언로드 시 자동 저장 설정
+             */
+            setupAutoSave() {
+                window.addEventListener('beforeunload', () => {
+                    // 세션이 진행 중이면 현재 상태로 로그 저장
+                    if (this.sessionData.sessionStartTime && !this.sessionData.logTime) {
+                        const logData = this.formatLogData();
+                        logData.부가정보 = JSON.stringify({
+                            ...this.sessionData.additionalData,
+                            autoSaved: true,
+                            reason: 'page_unload'
+                        });
+                        this.saveOfflineLog(logData);
+                    }
+                });
+            }
+
+            /**
+             * 로그 기능 활성화/비활성화
+             */
+            setEnabled(enabled) {
+                this.isEnabled = enabled;
+                console.log(`📝 로그 기록 ${enabled ? '활성화' : '비활성화'}`);
+            }
+
+            /**
+             * 저장된 오프라인 로그 개수 확인
+             */
+            getOfflineLogCount() {
+                try {
+                    const logs = JSON.parse(localStorage.getItem(this.offlineStorageKey) || '[]');
+                    return logs.length;
+                } catch {
+                    return 0;
+                }
+            }
+
+            /**
+             * 세션 초기화
+             */
+            resetSession() {
+                this.sessionData = {
+                    studentName: '',
+                    sessionStartTime: null,
+                    totalLearningTime: 0,
+                    correctAnswers: 0,
+                    wrongAnswers: 0,
+                    skippedAnswers: 0,
+                    hintsUsed: false,
+                    additionalData: {},
+                    logTime: null
+                };
+            }
+        }
+
+        // 전역에서 사용 가능하도록 설정
+        if (typeof window !== 'undefined') {
+            window.LearningLogger = LearningLogger;
+        }
+
+        // Node.js 환경에서도 사용 가능
+        if (typeof module !== 'undefined' && module.exports) {
+            module.exports = LearningLogger;
+        }
+
+
+    </script>
+    <script>
+    // 전역 로거 인스턴스
+    let globalLogger = null;
+
+    /**
+    * 학습 로거 초기화
+    * @param {Object} options - 설정 옵션
+    * @param {string} options.templateId - 템플릿 식별자 (필수)
+    * @param {string} options.sheetUrl - 구글 시트 URL (선택)
+    * @param {string} options.sheetId - 구글 시트 ID (선택)
+    * @param {boolean} options.isEnabled - 로그 기능 활성화 여부 (기본값: true)
+    * @param {string} options.webAppUrl - Apps Script Web App URL (선택)
+    */
+    function initLearningLogger(options = {}) {
+    // 기본 템플릿 ID 설정
+    if (!options.templateId) {
+    // HTML 파일명에서 템플릿 ID 추출
+    const fileName = window.location.pathname.split('/').pop();
+    options.templateId = fileName.replace('.html', '').replace('-template', '');
+    }
+
+    try {
+    globalLogger = new LearningLogger(options);
+    console.log(`✅ 학습 로거 초기화 완료: ${options.templateId}`);
+
+    // 오프라인 로그 개수 확인 및 표시
+    const offlineCount = globalLogger.getOfflineLogCount();
+    if (offlineCount > 0) {
+    showLoggerStatus(`📦 저장된 오프라인 로그 ${offlineCount}개가 있습니다.`, 'info');
+    }
+
+    return true;
+    } catch (error) {
+    console.error('❌ 학습 로거 초기화 실패:', error);
+    showLoggerStatus('로그 시스템 초기화에 실패했습니다.', 'error');
+    return false;
+    }
+    }
+
+    /**
+    * 학습 세션 시작
+    * @param {string} studentName - 학생 이름
+    * @param {Object} additionalData - 추가 데이터
+    */
+    function startLearning(studentName, additionalData = {}) {
+    if (!globalLogger) {
+    console.warn('⚠️ 로거가 초기화되지 않았습니다.');
+    return false;
+    }
+
+    if (!studentName || studentName.trim() === '') {
+    showLoggerStatus('학생 이름을 입력해주세요.', 'error');
+    return false;
+    }
+
+    globalLogger.startSession(studentName.trim(), additionalData);
+    showLoggerStatus(`학습 시작: ${studentName}`, 'success');
+    return true;
+    }
+
+    /**
+    * 답변 기록 (통합 인터페이스)
+    * @param {string|boolean} result - 'correct', 'wrong', 'skip' 또는 true/false
+    * @param {Object} additionalData - 추가 데이터
+    */
+    function recordAnswer(result, additionalData = {}) {
+    if (!globalLogger) {
+    console.warn('⚠️ 로거가 초기화되지 않았습니다.');
+    return false;
+    }
+
+    // 문자열 또는 불린값 처리
+    switch(result) {
+    case 'correct':
+    case true:
+    globalLogger.recordCorrectAnswer();
+    break;
+    case 'wrong':
+    case false:
+    globalLogger.recordWrongAnswer();
+    break;
+    case 'skip':
+    globalLogger.recordSkippedAnswer();
+    break;
+    default:
+    console.warn('⚠️ 알 수 없는 답변 결과:', result);
+    return false;
+    }
+
+    // 추가 데이터가 있으면 설정
+    Object.entries(additionalData).forEach(([key, value]) => {
+    globalLogger.setAdditionalData(key, value);
+    });
+
+    return true;
+    }
+
+    /**
+    * 힌트 사용 기록
+    */
+    function recordHintUsed() {
+    if (!globalLogger) {
+    console.warn('⚠️ 로거가 초기화되지 않았습니다.');
+    return false;
+    }
+
+    globalLogger.recordHintUsed();
+    return true;
+    }
+
+    /**
+    * 추가 데이터 설정
+    * @param {string|Object} key - 키 또는 객체
+    * @param {any} value - 값 (key가 문자열인 경우)
+    */
+    function setLogData(key, value) {
+    if (!globalLogger) {
+    console.warn('⚠️ 로거가 초기화되지 않았습니다.');
+    return false;
+    }
+
+    if (typeof key === 'object') {
+    // 객체인 경우 모든 키-값 쌍 설정
+    Object.entries(key).forEach(([k, v]) => {
+    globalLogger.setAdditionalData(k, v);
+    });
+    } else {
+    // 문자열인 경우 단일 키-값 설정
+    globalLogger.setAdditionalData(key, value);
+    }
+
+    return true;
+    }
+
+    /**
+    * 학습 세션 종료 및 로그 저장
+    * @param {Object} finalData - 최종 데이터
+    */
+    async function endLearning(finalData = {}) {
+    if (!globalLogger) {
+    console.warn('⚠️ 로거가 초기화되지 않았습니다.');
+    return { success: false, error: '로거가 초기화되지 않았습니다.' };
+    }
+
+    showLoggerStatus('학습 결과를 저장하는 중...', 'info');
+
+    try {
+    const result = await globalLogger.endSession(finalData);
+
+    if (result.success) {
+    if (result.isOffline) {
+    showLoggerStatus('오프라인 상태입니다. 온라인 복귀 시 자동 전송됩니다.', 'warning');
+    } else {
+    showLoggerStatus('학습 결과가 성공적으로 저장되었습니다!', 'success');
+    }
+    } else {
+    showLoggerStatus(`저장 실패: ${result.error}`, 'error');
+    }
+
+    return result;
+    } catch (error) {
+    console.error('❌ 학습 종료 처리 오류:', error);
+    showLoggerStatus('학습 결과 저장 중 오류가 발생했습니다.', 'error');
+    return { success: false, error: error.message };
+    }
+    }
+
+    /**
+    * 로그 기능 활성화/비활성화
+    * @param {boolean} enabled - 활성화 여부
+    */
+    function setLoggingEnabled(enabled) {
+    if (globalLogger) {
+    globalLogger.setEnabled(enabled);
+    showLoggerStatus(`로그 기록이 ${enabled ? '활성화' : '비활성화'}되었습니다.`, 'info');
+    }
+    }
+
+    /**
+    * 오프라인 로그 수동 전송
+    */
+    async function sendOfflineLogs() {
+    if (!globalLogger) {
+    console.warn('⚠️ 로거가 초기화되지 않았습니다.');
+    return { success: false, error: '로거가 초기화되지 않았습니다.' };
+    }
+
+    showLoggerStatus('오프라인 로그를 전송하는 중...', 'info');
+
+    try {
+    const result = await globalLogger.sendOfflineLogs();
+
+    if (result.success) {
+    showLoggerStatus(result.message, 'success');
+    } else {
+    showLoggerStatus(`전송 실패: ${result.message}`, 'error');
+    }
+
+    return result;
+    } catch (error) {
+    console.error('❌ 오프라인 로그 전송 오류:', error);
+    showLoggerStatus('오프라인 로그 전송 중 오류가 발생했습니다.', 'error');
+    return { success: false, error: error.message };
+    }
+    }
+
+    /**
+    * 로거 상태 메시지 표시
+    * @param {string} message - 메시지
+    * @param {string} type - 타입 ('success', 'error', 'warning', 'info')
+    */
+    function showLoggerStatus(message, type = 'info') {
+    console.log(`📝 [Logger] ${message}`);
+
+    // 기존 상태 요소가 있는지 확인
+    let statusElement = document.getElementById('logger-status');
+
+    if (!statusElement) {
+    // 상태 표시 요소 생성
+    statusElement = document.createElement('div');
+    statusElement.id = 'logger-status';
+    statusElement.style.cssText = `
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 12px 16px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 500;
+    max-width: 350px;
+    z-index: 9999;
+    opacity: 0;
+    transition: all 0.3s ease;
+    pointer-events: none;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    `;
+    document.body.appendChild(statusElement);
+    }
+
+    // 타입별 스타일 설정
+    const styles = {
+    success: 'background: #10B981; color: white;',
+    error: 'background: #EF4444; color: white;',
+    warning: 'background: #F59E0B; color: white;',
+    info: 'background: #3B82F6; color: white;'
+    };
+
+    statusElement.style.cssText += styles[type] || styles.info;
+    statusElement.textContent = message;
+    statusElement.style.opacity = '1';
+
+    // 3초 후 자동 숨김
+    setTimeout(() => {
+    statusElement.style.opacity = '0';
+    }, 3000);
+    }
+
+    /**
+    * 간편한 셋업 함수 - 기본 설정으로 빠르게 시작
+    * @param {string} templateId - 템플릿 ID
+    * @param {string} sheetUrl - 구글 시트 URL (선택)
+    */
+    function quickSetupLogger(templateId, sheetUrl = null) {
+    const options = { templateId };
+    if (sheetUrl) options.sheetUrl = sheetUrl;
+
+    return initLearningLogger(options);
+    }
+
+    /**
+    * HTML 폼에서 자동으로 학습 시작
+    * @param {string} nameInputId - 이름 입력 필드 ID
+    * @param {Object} additionalData - 추가 데이터
+    */
+    function startLearningFromForm(nameInputId = 'studentName', additionalData = {}) {
+    const nameInput = document.getElementById(nameInputId);
+    if (!nameInput) {
+    showLoggerStatus(`이름 입력 필드를 찾을 수 없습니다: ${nameInputId}`, 'error');
+    return false;
+    }
+
+    const studentName = nameInput.value.trim();
+    return startLearning(studentName, additionalData);
+    }
+
+    /**
+    * 현재 학습 상태 확인
+    */
+    function getLearningStatus() {
+    if (!globalLogger) {
+    return { initialized: false };
+    }
+
+    return {
+    initialized: true,
+    sessionActive: !!globalLogger.sessionData.sessionStartTime,
+    studentName: globalLogger.sessionData.studentName,
+    correctAnswers: globalLogger.sessionData.correctAnswers,
+    wrongAnswers: globalLogger.sessionData.wrongAnswers,
+    skippedAnswers: globalLogger.sessionData.skippedAnswers,
+    hintsUsed: globalLogger.sessionData.hintsUsed,
+    offlineLogCount: globalLogger.getOfflineLogCount(),
+    isOnline: globalLogger.isOnline
+    };
+    }
+
+    // 페이지 로드 시 자동 초기화 (선택적)
+    if (typeof window !== 'undefined') {
+    // 전역 함수로 등록
+    window.initLearningLogger = initLearningLogger;
+    window.startLearning = startLearning;
+    window.recordAnswer = recordAnswer;
+    window.recordHintUsed = recordHintUsed;
+    window.setLogData = setLogData;
+    window.endLearning = endLearning;
+    window.setLoggingEnabled = setLoggingEnabled;
+    window.sendOfflineLogs = sendOfflineLogs;
+    window.showLoggerStatus = showLoggerStatus;
+    window.quickSetupLogger = quickSetupLogger;
+    window.startLearningFromForm = startLearningFromForm;
+    window.getLearningStatus = getLearningStatus;
+    }
+
+    // 유틸리티 함수들
+    const LoggerUtils = {
+    // 시간 포맷팅
+    formatTime(seconds) {
+    const minutes = Math.floor(seconds / 60);
+    const remainingSeconds = seconds % 60;
+    return `${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
+    },
+
+    // 정답률 계산
+    calculateAccuracy(correct, total) {
+    if (total === 0) return 0;
+    return Math.round((correct / total) * 100);
+    },
+
+    // 로컬 스토리지 정리
+    clearOfflineLogs() {
+    if (globalLogger) {
+    localStorage.removeItem(globalLogger.offlineStorageKey);
+    showLoggerStatus('오프라인 로그가 삭제되었습니다.', 'info');
+    }
+    }
+    };
+
+    if (typeof window !== 'undefined') {
+    window.LoggerUtils = LoggerUtils;
+    }
+    </script>
+    <!-- END_CORE_SYSTEM -->
+    
+    <!-- START_USER_EDITABLE_DATA -->
+    <script>
+        const quizData = [{"english":"january","correctAnswer":"1월","choices":["1월","마담","미터","파운드"]},{"english":"quid","correctAnswer":"파운드","choices":["갤런","파운드","미터","1월"]},{"english":"madam","correctAnswer":"마담","choices":["미터","마담","갤런","파운드"]},{"english":"gallon","correctAnswer":"갤런","choices":["1월","파운드","마담","갤런"]},{"english":"meter","correctAnswer":"미터","choices":["미터","1월","파운드","갤런"]}];
+    </script>
+    <!-- END_USER_EDITABLE_DATA -->
+
+    <!-- START_USER_EDITABLE_LOGIC -->
+    <script>
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let userAnswers = [];
+        let learnerName = '';
+        let startTime = new Date();
+        let selectedChoice = null;
+        let currentSchoolLevel = '';
+        let currentTeacherEmail = '';
+        
+        // 로거 인스턴스 저장용 변수
+        let logger = null;
+        
+        function startQuiz() {
+            learnerName = document.getElementById('learnerName').value.trim();
+            
+            if (!learnerName) {
+                alert('이름을 입력해주세요.');
+                return;
+            }
+            
+            // 템플릿 변수에서 학교급과 학년 정보 가져오기
+            const schoolLevel = 'elementary';
+            const grade = '3';
+            
+            // 전역 변수에 저장
+            window.currentSchoolLevel = schoolLevel;
+            window.currentGrade = grade;
+            
+            // 템플릿 변수에서 시트 URL 가져오기
+            const sheetUrl = 'https://docs.google.com/spreadsheets/d/1cdlLcI6MeTlPDUbyjoZ5KLXPQGgZ6PIfkgWiXJNYlqc/edit?usp=sharing';
+            
+            // 로거 초기화 (시트 URL이 있는 경우에만)
+            const isLoggingEnabled = sheetUrl && sheetUrl.length > 0 && !sheetUrl.includes('{{');
+            if (isLoggingEnabled) {
+                try {
+                    initLearningLogger({
+                        templateId: 'multiple-choice-quiz',
+                        sheetUrl: sheetUrl,
+                        isEnabled: true
+                    });
+                    
+                    // 로그 시스템에 학습 시작 기록
+                    window.startLearning(learnerName, {
+                        totalQuestions: quizData.length,
+                        studyType: 'multiple-choice-quiz',
+                        schoolLevel: schoolLevel,
+                        grade: grade
+                    });
+                } catch (error) {
+                    console.warn('로그 시스템 초기화 실패:', error);
+                }
+            }
+            
+            document.getElementById('startScreen').classList.add('hidden');
+            document.getElementById('quizScreen').classList.remove('hidden');
+            
+            currentQuestionIndex = 0;
+            score = 0;
+            userAnswers = [];
+            startTime = new Date();
+            
+            showQuestion();
+        }
+        
+        function showQuestion() {
+            if (currentQuestionIndex >= quizData.length) {
+                showResults();
+                return;
+            }
+            
+            const question = quizData[currentQuestionIndex];
+            selectedChoice = null;
+            
+            // 진행률 업데이트
+            const progress = ((currentQuestionIndex + 1) / quizData.length) * 100;
+            document.getElementById('progressBar').style.width = progress + '%';
+            document.getElementById('questionCounter').textContent = `${currentQuestionIndex + 1} / ${quizData.length}`;
+            
+            // 영어 단어 표시
+            document.getElementById('englishWord').textContent = question.english;
+            
+            // 선택지 생성
+            const choicesContainer = document.getElementById('choicesContainer');
+            choicesContainer.innerHTML = '';
+            
+            question.choices.forEach((choice, index) => {
+                const choiceButton = document.createElement('button');
+                choiceButton.className = 'choice';
+                choiceButton.innerHTML = `<span class="choice-letter">${String.fromCharCode(65 + index)}.</span>${choice}`;
+                choiceButton.onclick = () => selectChoice(choiceButton, choice);
+                choicesContainer.appendChild(choiceButton);
+            });
+            
+            // 다음 버튼 비활성화
+            document.getElementById('nextBtn').disabled = true;
+            const nextBtn = document.getElementById('nextBtn');
+            nextBtn.textContent = currentQuestionIndex < quizData.length - 1 ? '다음 문제' : '결과 보기';
+        }
+        
+        function selectChoice(choiceElement, selectedAnswer) {
+            if (selectedChoice !== null) return; // 이미 선택했으면 무시
+            
+            selectedChoice = selectedAnswer;
+            const question = quizData[currentQuestionIndex];
+            const isCorrect = selectedAnswer === question.correctAnswer;
+            
+            // 모든 선택지 비활성화
+            const choices = document.querySelectorAll('.choice');
+            choices.forEach(choice => {
+                choice.classList.add('disabled');
+                const choiceText = choice.textContent.substring(2); // "A. " 부분 제거
+                
+                if (choiceText === question.correctAnswer) {
+                    choice.classList.add('correct');
+                } else if (choiceText === selectedAnswer && !isCorrect) {
+                    choice.classList.add('wrong');
+                }
+            });
+            
+            // 로그 시스템에 답변 기록 (로그가 활성화된 경우만)
+            if (typeof recordAnswer === 'function') {
+                try {
+                    recordAnswer(isCorrect ? 'correct' : 'wrong', {
+                        questionIndex: currentQuestionIndex,
+                        english: question.english,
+                        correctAnswer: question.correctAnswer,
+                        selectedAnswer: selectedAnswer,
+                        isCorrect: isCorrect
+                    });
+                } catch (error) {
+                    console.warn('로그 기록 실패:', error);
+                }
+            }
+            
+            // 답안 기록
+            userAnswers.push({
+                question: question.english,
+                selectedAnswer: selectedAnswer,
+                correctAnswer: question.correctAnswer,
+                isCorrect: isCorrect
+            });
+            
+            if (isCorrect) {
+                score++;
+            }
+            
+            // 다음 버튼 활성화
+            document.getElementById('nextBtn').disabled = false;
+        }
+        
+        function nextQuestion() {
+            currentQuestionIndex++;
+            showQuestion();
+        }
+        
+        function playSound() {
+            const question = quizData[currentQuestionIndex];
+            if ('speechSynthesis' in window) {
+                const utterance = new SpeechSynthesisUtterance(question.english);
+                utterance.lang = 'en-US';
+                utterance.rate = 0.8;
+                speechSynthesis.speak(utterance);
+            }
+        }
+        
+        function showResults() {
+            document.getElementById('quizScreen').classList.add('hidden');
+            document.getElementById('resultsScreen').classList.remove('hidden');
+            
+            const totalQuestions = quizData.length;
+            const accuracy = Math.round((score / totalQuestions) * 100);
+            
+            document.getElementById('finalScore').textContent = `${score} / ${totalQuestions}`;
+            document.getElementById('finalAccuracy').textContent = `정답률: ${accuracy}%`;
+            
+            // 결과 목록 생성
+            const resultsList = document.getElementById('resultsList');
+            resultsList.innerHTML = '';
+            
+            userAnswers.forEach((answer, index) => {
+                const resultItem = document.createElement('div');
+                resultItem.className = `result-item ${answer.isCorrect ? 'correct' : 'wrong'}`;
+                
+                let answerText = '';
+                if (answer.isCorrect) {
+                    answerText = `<div class="result-answer">선택한 답: <span class="result-correct-answer">${answer.selectedAnswer}</span></div>`;
+                } else {
+                    answerText = `
+                        <div class="result-answer">선택한 답: <span class="result-wrong-answer">${answer.selectedAnswer}</span></div>
+                        <div class="result-answer">정답: <span class="result-correct-answer">${answer.correctAnswer}</span></div>
+                    `;
+                }
+                
+                resultItem.innerHTML = `
+                    <div class="result-word">${answer.question}</div>
+                    ${answerText}
+                `;
+                
+                resultsList.appendChild(resultItem);
+            });
+            
+            // 새로운 로그 시스템으로 학습 완료 기록
+            logLearningData();
+        }
+        
+        async function logLearningData() {
+            const totalQuestions = quizData.length;
+            const accuracy = Math.round((score / totalQuestions) * 100);
+            
+            // 새로운 로그 시스템으로 학습 완료 기록 (로그가 활성화된 경우만)
+            if (typeof endLearning === 'function') {
+                try {
+                    const logResult = await endLearning({
+                        finalAccuracy: accuracy,
+                        finalScore: `${score}/${totalQuestions}`,
+                        schoolLevel: currentSchoolLevel,
+                        teacherEmail: currentTeacherEmail,
+                        detailedAnswers: JSON.stringify(userAnswers),
+                        studyMethod: 'multiple-choice-quiz'
+                    });
+                    
+                    // 로그 저장 결과 표시
+                    if (logResult.success) {
+                        if (logResult.isOffline) {
+                            console.log('📱 오프라인 상태입니다. 온라인 복귀 시 자동 전송됩니다.');
+                        } else {
+                            console.log('✅ 학습 결과가 구글 시트에 저장되었습니다!');
+                        }
+                    } else {
+                        console.error('❌ 저장 실패:', logResult.error);
+                    }
+                } catch (error) {
+                    console.warn('로그 종료 실패:', error);
+                }
+            } else {
+                console.log('📝 로그 시스템이 비활성화되어 있습니다.');
+            }
+        }
+        
+        // 기존 saveToGoogleSheet 함수들은 새로운 통합 로그 시스템으로 대체됨
+        
+        function restartQuiz() {
+            document.getElementById('resultsScreen').classList.add('hidden');
+            document.getElementById('startScreen').classList.remove('hidden');
+            
+            // 초기화
+            document.getElementById('learnerName').value = '';
+            currentQuestionIndex = 0;
+            score = 0;
+            userAnswers = [];
+            selectedChoice = null;
+        }
+        
+        // 엔터키로 퀴즈 시작
+        document.getElementById('learnerName').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                startQuiz();
+            }
+        });
+    </script>
+    <!-- END_USER_EDITABLE_LOGIC -->
+</body>
+</html>
