@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>영어 지문 학습 워크시트</title>
+    <style>
+        /* 전체 레이아웃 및 폰트 설정 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, 'Nanum Gothic', sans-serif;
+            line-height: 1.8; /* 가독성을 위한 줄 간격 확장 */
+            color: #444; /* 본문 색상을 약간 부드럽게 */
+            background: #fff8f2; /* 종이 질감을 위한 부드러운 배경색 */
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .worksheet-container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: #fdfbf7; /* 하얀 종이 배경 */
+            border-radius: 12px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.05); /* 은은한 그림자 효과 */
+            overflow: hidden;
+            border: 1px solid #e0e0e0; /* 얇은 테두리 */
+        }
+
+        /* 헤더 섹션 - 노트 탭 같은 느낌으로 수정 */
+        .header {
+            background: #d4e6f1; /* 차분한 파스텔 블루 */
+            color: #2c3e50; /* 헤더 글자색 */
+            padding: 30px 30px 20px;
+            text-align: center;
+            position: relative;
+            border-bottom: 2px dashed #aeb6bf; /* 점선 테두리 추가 */
+        }
+
+        .header h1 {
+            font-size: 2.2em;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .header .meta-info {
+            display: flex;
+            justify-content: center;
+            gap: 25px;
+            margin-top: 15px;
+            flex-wrap: wrap;
+            font-size: 0.9em;
+        }
+
+        .meta-item {
+            background: rgba(255,255,255,0.7);
+            backdrop-filter: blur(5px);
+            padding: 6px 14px;
+            border-radius: 15px;
+            font-weight: 500;
+            border: 1px solid rgba(255,255,255,0.8);
+            color: #4a698a;
+        }
+
+        /* 콘텐츠 섹션 */
+        .content {
+            padding: 40px 50px;
+        }
+
+        .section {
+            margin-bottom: 50px;
+        }
+
+        .section-title {
+            font-size: 1.6em;
+            color: #34495e; /* 차분한 제목 색상 */
+            margin-bottom: 25px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e5e5e5;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            font-weight: 700;
+        }
+
+        .section-icon {
+            width: 35px;
+            height: 35px;
+            background: #4a90e2; /* 아이콘 색상 변경 */
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+
+        .passage-text {
+            background: #fdfbf7;
+            border-left: 5px solid #aeb6bf; /* 부드러운 색상으로 변경 */
+            padding: 30px;
+            border-radius: 8px;
+            font-size: 1.1em;
+            line-height: 1.9;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        /* 분석 카드 */
+        .analysis-grid {
+            /* 한 줄에 표현되도록 flexbox로 변경 */
+            display: flex;
+            flex-wrap: nowrap; /* 줄바꿈 방지 */
+            justify-content: space-between; /* 카드 사이 간격 균등 분배 */
+            gap: 15px; /* 카드 사이 간격 */
+            margin-bottom: 35px;
+        }
+
+        .analysis-card {
+            background: #fdfbf7;
+            padding: 25px;
+            border-radius: 10px;
+            border: 1px solid #e0e0e0;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            flex-shrink: 0; /* 카드 축소 방지 */
+            flex-grow: 1; /* 카드 확장 허용 */
+            flex-basis: 0; /* 기본 크기를 0으로 설정하여 flex-grow가 작동하도록 함 */
+        }
+
+        .analysis-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+        }
+
+        .analysis-number {
+            font-size: 2.5em;
+            font-weight: 700;
+            color: #4a698a; /* 부드러운 색상으로 변경 */
+            margin-bottom: 5px;
+        }
+
+        .analysis-label {
+            color: #666;
+            font-size: 0.9em;
+        }
+
+        /* 어휘 및 문법 섹션 */
+        .vocabulary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 15px;
+        }
+
+        .vocab-item {
+            background: #fdfbf7;
+            border: 1px solid #e5e5e5;
+            border-radius: 8px;
+            padding: 15px;
+            transition: all 0.3s ease;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.03);
+        }
+
+        .vocab-item:hover {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            transform: translateY(-2px);
+            border-color: #4a698a;
+        }
+
+        .vocab-english {
+            font-weight: 600;
+            color: #34495e;
+            font-size: 1.1em;
+            margin-bottom: 5px;
+        }
+
+        .vocab-korean {
+            color: #7f8c8d;
+            font-size: 0.95em;
+        }
+
+        .grammar-list {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .grammar-item {
+            background: #fdfbf7;
+            border-left: 4px solid #8e44ad; /* 문법은 보라색으로 포인트 */
+            margin-bottom: 15px;
+            padding: 15px 20px;
+            border-radius: 0 8px 8px 0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        .grammar-title {
+            font-weight: 700;
+            color: #8e44ad;
+            margin-bottom: 8px;
+        }
+
+        .grammar-example {
+            font-style: italic;
+            color: #555;
+            font-size: 0.9em;
+            line-height: 1.6;
+        }
+
+        .explanation-text {
+            background: #fefcf5;
+            border: 1px solid #f9e79f;
+            border-radius: 8px;
+            padding: 20px;
+            line-height: 1.7;
+            font-size: 1em;
+        }
+
+        /* 푸터 */
+        .footer {
+            background: #f0f2f5;
+            padding: 20px;
+            text-align: center;
+            color: #666;
+            font-size: 0.85em;
+            border-top: 1px solid #e5e5e5;
+        }
+
+        /* 모바일 반응형 */
+        @media (max-width: 768px) {
+            .content {
+                padding: 20px;
+            }
+            
+            .header .meta-info {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .analysis-grid {
+                flex-direction: column;
+            }
+
+            .analysis-card {
+                flex: 1 1 100%;
+            }
+            
+            .vocabulary-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="worksheet-container">
+        <div class="header">
+            <h1>📚 영어 지문 학습 워크시트</h1>
+            <div class="meta-info">
+                <div class="meta-item">📖 주제: 행복한 방학생활</div>
+                <div class="meta-item">🎓 학교급: elementary 3학년</div>
+                <div class="meta-item">📅 생성일: 2025. 8. 21.</div>
+            </div>
+        </div>
+        
+        <div class="content">
+            <!-- 지문 섹션 -->
+            <div class="section">
+                <h2 class="section-title">
+                    <span class="section-icon">📖</span>
+                    영어 지문
+                </h2>
+                <div class="passage-text">
+                    Summer vacation is always a happy time for every kid. No school, no homework, and all day just for fun! 
+
+One sunny afternoon, a boy named Jack decided to enjoy his vacation at the beach. He woke up early in the morning, ate his breakfast, and packed his bag. His bag was full of fun things: a ball, a book, sunscreen, and a bottle of water. Jack's dad drove him to the beach. As they arrived, Jack felt the warm air and the cool blue water across his face. He could also smell the salty sea. 
+
+At the beach, Jack found a large space to lay down his towel. He took off his shoes and let his feet feel the soft, warm sand. He then grabbed his ball and started to play catch with his dad. Jack's dad was good at catching the ball. They laughed and had a great time under the bright sun.
+
+After a while, Jack decided to build a sandcastle. He enjoyed shaping the sand into towers and walls. It was not easy, but he was happy to see his castle slowly take shape. He noticed a small bird flying around his castle. It was a beautiful sight.
+
+Soon, Jack felt hungry. He sat down and opened his bag. Inside, he found a sandwich his mom had packed for him. It tasted even better at the beach. He also drank the water from his bottle. It felt refreshing.
+
+As the sun began to set, Jack and his dad decided to go home. Jack was tired but he felt happy. He had a wonderful day at the beach. He thought about how lucky he was to have such a fun day. 
+
+On the way home, Jack looked out of the car window. He saw a beautiful sunset. The sky was full of orange and purple colors. He felt grateful for such a beautiful day. He couldn't wait for another exciting day of his summer vacation.
+
+For Jack, this was a perfect summer day. He learned that happiness can be found in simple things: playing a game, building a sandcastle, eating a good sandwich, and spending time with family. This is what made his summer vacation so special. He couldn't wait for what the next day would bring.
+                </div>
+            </div>
+            
+            <!-- 지문 분석 섹션 -->
+            <div class="section">
+                <h2 class="section-title">
+                    <span class="section-icon">📊</span>
+                    지문 분석
+                </h2>
+                <div class="analysis-grid">
+                    <div class="analysis-card">
+                        <div class="analysis-number">376</div>
+                        <div class="analysis-label">총 단어 수</div>
+                    </div>
+                    <div class="analysis-card">
+                        <div class="analysis-number">36.5%</div>
+                        <div class="analysis-label">학교급 어휘 사용률</div>
+                    </div>
+                    <div class="analysis-card">
+                        <div class="analysis-number">73</div>
+                        <div class="analysis-label">사용된 핵심 어휘</div>
+                    </div>
+                    <div class="analysis-card">
+                        <div class="analysis-number">16</div>
+                        <div class="analysis-label">문장 수</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 핵심 단어 섹션 -->
+            <div class="section">
+                <h2 class="section-title">
+                    <span class="section-icon">💎</span>
+                    핵심 어휘
+                </h2>
+                <div class="vocabulary-grid">
+                    
+    <div class="vocab-item">
+      <div class="vocab-english">at</div>
+      <div class="vocab-korean">~에서</div>
+    </div>
+  
+    <div class="vocab-item">
+      <div class="vocab-english">and</div>
+      <div class="vocab-korean">그리고</div>
+    </div>
+  
+    <div class="vocab-item">
+      <div class="vocab-english">car</div>
+      <div class="vocab-korean">자동차</div>
+    </div>
+  
+    <div class="vocab-item">
+      <div class="vocab-english">arm</div>
+      <div class="vocab-korean">팔</div>
+    </div>
+  
+    <div class="vocab-item">
+      <div class="vocab-english">full</div>
+      <div class="vocab-korean">가득한</div>
+    </div>
+  
+    <div class="vocab-item">
+      <div class="vocab-english">book</div>
+      <div class="vocab-korean">책</div>
+    </div>
+  
+    <div class="vocab-item">
+      <div class="vocab-english">early</div>
+      <div class="vocab-korean">이른</div>
+    </div>
+  
+    <div class="vocab-item">
+      <div class="vocab-english">enjoy</div>
+      <div class="vocab-korean">즐기다</div>
+    </div>
+  
+    <div class="vocab-item">
+      <div class="vocab-english">breakfast</div>
+      <div class="vocab-korean">아침식사</div>
+    </div>
+  
+    <div class="vocab-item">
+      <div class="vocab-english">dad</div>
+      <div class="vocab-korean">아빠</div>
+    </div>
+  
+    <div class="vocab-item">
+      <div class="vocab-english">all</div>
+      <div class="vocab-korean">모든</div>
+    </div>
+  
+    <div class="vocab-item">
+      <div class="vocab-english">after</div>
+      <div class="vocab-korean">~후에</div>
+    </div>
+  
+                </div>
+            </div>
+            
+            <!-- 핵심 문법 섹션 -->
+            <div class="section">
+                <h2 class="section-title">
+                    <span class="section-icon">⚡</span>
+                    핵심 문법 포인트
+                </h2>
+                <ul class="grammar-list">
+                    
+    <li class="grammar-item">
+      <div class="grammar-title">Simple Past Tense</div>
+      <div class="grammar-example">He woke up early in the morning, ate his breakfast, and packed his bag. This sentence demonstrates the use of simple past tense to describe actions that happened in the past.</div>
+    </li>
+  
+    <li class="grammar-item">
+      <div class="grammar-title">Adjectives and Adverbs</div>
+      <div class="grammar-example">He felt the warm air and the cool blue water across his face. This sentence shows the use of adjectives (warm, cool, blue) and adverbs to describe nouns and verbs.</div>
+    </li>
+  
+    <li class="grammar-item">
+      <div class="grammar-title">Use of Conjunctions</div>
+      <div class="grammar-example">Jack was tired but he felt happy. This sentence illustrates the use of conjunction 'but' to connect two contrasting ideas.</div>
+    </li>
+  
+    <li class="grammar-item">
+      <div class="grammar-title">Future Tense with 'will'</div>
+      <div class="grammar-example">He couldn't wait for what the next day would bring. This sentence uses 'would' to talk about a future event in the past.</div>
+    </li>
+  
+                </ul>
+            </div>
+            
+            <!-- 해설 섹션 -->
+            <div class="section">
+                <h2 class="section-title">
+                    <span class="section-icon">💡</span>
+                    지문 해설 및 학습 포인트
+                </h2>
+                <div class="explanation-text">
+                    이 지문은 어린이의 여름 휴가를 묘사하며, 간단한 일상 활동에서 행복을 찾는 것의 중요성을 강조합니다. 주요 학습 포인트는 과거 시제, 형용사와 부사의 사용, 접속사의 사용, 그리고 'will'을 사용한 미래 시제입니다. 이러한 문법 요소들은 이야기를 풍부하고 자연스럽게 만들며, 독자가 이야기 속으로 빠져들 수 있게 합니다.
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>🤖 AI로 생성된 영어 학습 자료 | English Study Platform</p>
+            <p>이 워크시트는 elementary 3학년 학습자를 위한 맞춤형 교육 자료입니다.</p>
+        </div>
+    </div>
+</body>
+</html>
