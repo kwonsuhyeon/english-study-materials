@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>영어 지문 학습 워크시트</title>
+    <style>
+        /* 전체 레이아웃 및 폰트 설정 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, 'Nanum Gothic', sans-serif;
+            line-height: 1.8; /* 가독성을 위한 줄 간격 확장 */
+            color: #444; /* 본문 색상을 약간 부드럽게 */
+            background: #fff8f2; /* 종이 질감을 위한 부드러운 배경색 */
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .worksheet-container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: #fdfbf7; /* 하얀 종이 배경 */
+            border-radius: 12px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.05); /* 은은한 그림자 효과 */
+            overflow: hidden;
+            border: 1px solid #e0e0e0; /* 얇은 테두리 */
+        }
+
+        /* 헤더 섹션 - 노트 탭 같은 느낌으로 수정 */
+        .header {
+            background: #d4e6f1; /* 차분한 파스텔 블루 */
+            color: #2c3e50; /* 헤더 글자색 */
+            padding: 30px 30px 20px;
+            text-align: center;
+            position: relative;
+            border-bottom: 2px dashed #aeb6bf; /* 점선 테두리 추가 */
+        }
+
+        .header h1 {
+            font-size: 2.2em;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .header .meta-info {
+            display: flex;
+            justify-content: center;
+            gap: 25px;
+            margin-top: 15px;
+            flex-wrap: wrap;
+            font-size: 0.9em;
+        }
+
+        .meta-item {
+            background: rgba(255,255,255,0.7);
+            backdrop-filter: blur(5px);
+            padding: 6px 14px;
+            border-radius: 15px;
+            font-weight: 500;
+            border: 1px solid rgba(255,255,255,0.8);
+            color: #4a698a;
+        }
+
+        /* 콘텐츠 섹션 */
+        .content {
+            padding: 40px 50px;
+        }
+
+        .section {
+            margin-bottom: 50px;
+        }
+
+        .section-title {
+            font-size: 1.6em;
+            color: #34495e; /* 차분한 제목 색상 */
+            margin-bottom: 25px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e5e5e5;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            font-weight: 700;
+        }
+
+        .section-icon {
+            width: 35px;
+            height: 35px;
+            background: #4a90e2; /* 아이콘 색상 변경 */
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+
+        .passage-text {
+            background: #fdfbf7;
+            border-left: 5px solid #aeb6bf; /* 부드러운 색상으로 변경 */
+            padding: 30px;
+            border-radius: 8px;
+            font-size: 1.1em;
+            line-height: 1.9;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        /* 분석 카드 */
+        .analysis-grid {
+            /* 한 줄에 표현되도록 flexbox로 변경 */
+            display: flex;
+            flex-wrap: nowrap; /* 줄바꿈 방지 */
+            justify-content: space-between; /* 카드 사이 간격 균등 분배 */
+            gap: 15px; /* 카드 사이 간격 */
+            margin-bottom: 35px;
+        }
+
+        .analysis-card {
+            background: #fdfbf7;
+            padding: 25px;
+            border-radius: 10px;
+            border: 1px solid #e0e0e0;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            flex-shrink: 0; /* 카드 축소 방지 */
+            flex-grow: 1; /* 카드 확장 허용 */
+            flex-basis: 0; /* 기본 크기를 0으로 설정하여 flex-grow가 작동하도록 함 */
+        }
+
+        .analysis-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+        }
+
+        .analysis-number {
+            font-size: 2.5em;
+            font-weight: 700;
+            color: #4a698a; /* 부드러운 색상으로 변경 */
+            margin-bottom: 5px;
+        }
+
+        .analysis-label {
+            color: #666;
+            font-size: 0.9em;
+        }
+
+        /* 어휘 및 문법 섹션 */
+        .vocabulary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 15px;
+        }
+
+        .vocab-item {
+            background: #fdfbf7;
+            border: 1px solid #e5e5e5;
+            border-radius: 8px;
+            padding: 15px;
+            transition: all 0.3s ease;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.03);
+        }
+
+        .vocab-item:hover {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            transform: translateY(-2px);
+            border-color: #4a698a;
+        }
+
+        .vocab-english {
+            font-weight: 600;
+            color: #34495e;
+            font-size: 1.1em;
+            margin-bottom: 5px;
+        }
+
+        .vocab-korean {
+            color: #7f8c8d;
+            font-size: 0.95em;
+        }
+
+        .grammar-list {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .grammar-item {
+            background: #fdfbf7;
+            border-left: 4px solid #8e44ad; /* 문법은 보라색으로 포인트 */
+            margin-bottom: 15px;
+            padding: 15px 20px;
+            border-radius: 0 8px 8px 0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        .grammar-title {
+            font-weight: 700;
+            color: #8e44ad;
+            margin-bottom: 8px;
+        }
+
+        .grammar-example {
+            font-style: italic;
+            color: #555;
+            font-size: 0.9em;
+            line-height: 1.6;
+        }
+
+        .explanation-text {
+            background: #fefcf5;
+            border: 1px solid #f9e79f;
+            border-radius: 8px;
+            padding: 20px;
+            line-height: 1.7;
+            font-size: 1em;
+        }
+
+        /* 푸터 */
+        .footer {
+            background: #f0f2f5;
+            padding: 20px;
+            text-align: center;
+            color: #666;
+            font-size: 0.85em;
+            border-top: 1px solid #e5e5e5;
+        }
+
+        /* 모바일 반응형 */
+        @media (max-width: 768px) {
+            .content {
+                padding: 20px;
+            }
+            
+            .header .meta-info {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .analysis-grid {
+                flex-direction: column;
+            }
+
+            .analysis-card {
+                flex: 1 1 100%;
+            }
+            
+            .vocabulary-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="worksheet-container">
+        <div class="header">
+            <h1>📚 영어 지문 학습 워크시트</h1>
+            <div class="meta-info">
+                <div class="meta-item">📖 주제: 맛있는 떡볶이</div>
+                <div class="meta-item">🎓 학교급: elementary 3학년</div>
+                <div class="meta-item">📅 생성일: 2025. 8. 21.</div>
+            </div>
+        </div>
+        
+        <div class="content">
+            <!-- 지문 섹션 -->
+            <div class="section">
+                <h2 class="section-title">
+                    <span class="section-icon">📖</span>
+                    영어 지문
+                </h2>
+                <div class="passage-text">
+                    Once upon a time, in a big city, there was a boy who loved delicious food. He always had a special love for his mom's cooking. But out of all dishes, his favorite was spicy rice cake, also known as "tteokbokki".
+
+One afternoon, the boy was at home. His tummy began to feel hungry. He thought about his mom's tteokbokki. His mouth began to water at the thought. He could almost taste the spicy and sweet sauce, and the chewy rice cakes. He decided he would ask his mom to make it for dinner.
+
+He ran into the kitchen, where his mom was. With a big smile on his face, he said, "Mom, can we have tteokbokki for dinner?" His mom looked at him and smiled back. "Of course, my son!" she answered.
+
+Together, they began to make the tteokbokki. His mom showed him how to prepare the rice cakes. She took out a bottle of red pepper paste from the fridge. The boy watched as she mixed it with water and sugar to make the sauce. He could already smell the spicy aroma fill the air around them.
+
+While the sauce was cooking, his mom added the rice cakes. The boy could hear the rice cakes sizzling in the hot sauce. His heart was filled with joy and excitement. He knew it would be a wonderful dinner.
+
+Finally, the moment he was waiting for arrived. His mom served the tteokbokki in a large bowl. The boy could see the steam rising from the hot and spicy dish. He could hardly wait to taste it.
+
+He took a big bite. It was just as he had imagined. The rice cakes were chewy, and the sauce was a perfect mix of spicy and sweet. He felt warm and happy. He looked at his mom and said, "Mom, your tteokbokki is the best in the world!"
+
+From that day on, the boy often helped his mom cook tteokbokki. He enjoyed every moment of it. He learned that cooking was not just about eating, but also about spending time with family and making happy memories.
+                </div>
+            </div>
+            
+            <!-- 지문 분석 섹션 -->
+            <div class="section">
+                <h2 class="section-title">
+                    <span class="section-icon">📊</span>
+                    지문 분석
+                </h2>
+                <div class="analysis-grid">
+                    <div class="analysis-card">
+                        <div class="analysis-number">345</div>
+                        <div class="analysis-label">총 단어 수</div>
+                    </div>
+                    <div class="analysis-card">
+                        <div class="analysis-number">30.0%</div>
+                        <div class="analysis-label">학교급 어휘 사용률</div>
+                    </div>
+                    <div class="analysis-card">
+                        <div class="analysis-number">60</div>
+                        <div class="analysis-label">사용된 핵심 어휘</div>
+                    </div>
+                    <div class="analysis-card">
+                        <div class="analysis-number">20</div>
+                        <div class="analysis-label">문장 수</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 핵심 단어 섹션 -->
+            <div class="section">
+                <h2 class="section-title">
+                    <span class="section-icon">💎</span>
+                    핵심 어휘
+                </h2>
+                <div class="vocabulary-grid">
+                    
+    <div class="vocab-item">
+      <div class="vocab-english">arm</div>
+      <div class="vocab-korean">팔</div>
+    </div>
+  
+    <div class="vocab-item">
+      <div class="vocab-english">every</div>
+      <div class="vocab-korean">모든</div>
+    </div>
+  
+    <div class="vocab-item">
+      <div class="vocab-english">i</div>
+      <div class="vocab-korean">나</div>
+    </div>
+  
+    <div class="vocab-item">
+      <div class="vocab-english">family</div>
+      <div class="vocab-korean">가족</div>
+    </div>
+  
+    <div class="vocab-item">
+      <div class="vocab-english">have</div>
+      <div class="vocab-korean">가지다</div>
+    </div>
+  
+    <div class="vocab-item">
+      <div class="vocab-english">eat</div>
+      <div class="vocab-korean">먹다</div>
+    </div>
+  
+    <div class="vocab-item">
+      <div class="vocab-english">enjoy</div>
+      <div class="vocab-korean">즐기다</div>
+    </div>
+  
+    <div class="vocab-item">
+      <div class="vocab-english">face</div>
+      <div class="vocab-korean">얼굴</div>
+    </div>
+  
+    <div class="vocab-item">
+      <div class="vocab-english">king</div>
+      <div class="vocab-korean">왕</div>
+    </div>
+  
+    <div class="vocab-item">
+      <div class="vocab-english">be</div>
+      <div class="vocab-korean">~이다</div>
+    </div>
+  
+    <div class="vocab-item">
+      <div class="vocab-english">answer</div>
+      <div class="vocab-korean">답</div>
+    </div>
+  
+    <div class="vocab-item">
+      <div class="vocab-english">ear</div>
+      <div class="vocab-korean">귀</div>
+    </div>
+  
+                </div>
+            </div>
+            
+            <!-- 핵심 문법 섹션 -->
+            <div class="section">
+                <h2 class="section-title">
+                    <span class="section-icon">⚡</span>
+                    핵심 문법 포인트
+                </h2>
+                <ul class="grammar-list">
+                    
+    <li class="grammar-item">
+      <div class="grammar-title">Simple Past Tense</div>
+      <div class="grammar-example">Once upon a time, in a big city, there was a boy who loved delicious food. (과거의 일을 나타내는 간단한 과거 시제 사용 예시)</div>
+    </li>
+  
+    <li class="grammar-item">
+      <div class="grammar-title">Direct Speech</div>
+      <div class="grammar-example">"Mom, can we have tteokbokki for dinner?" His mom looked at him and smiled back. "Of course, my son!" she answered. (직접적인 대화를 나타내는 직접적인 발언 사용 예시)</div>
+    </li>
+  
+    <li class="grammar-item">
+      <div class="grammar-title">Adjectives and Adverbs</div>
+      <div class="grammar-example">The boy could see the steam rising from the hot and spicy dish. (형용사와 부사를 사용하여 묘사하는 예시)</div>
+    </li>
+  
+    <li class="grammar-item">
+      <div class="grammar-title">Present Perfect Tense</div>
+      <div class="grammar-example">From that day on, the boy often helped his mom cook tteokbokki. (과거의 행동이 현재에 영향을 미치는 현재완료 시제 사용 예시)</div>
+    </li>
+  
+                </ul>
+            </div>
+            
+            <!-- 해설 섹션 -->
+            <div class="section">
+                <h2 class="section-title">
+                    <span class="section-icon">💡</span>
+                    지문 해설 및 학습 포인트
+                </h2>
+                <div class="explanation-text">
+                    이 지문은 한 소년이 어머니와 함께 떡볶이를 만들어 먹는 이야기를 담고 있습니다. 학습 포인트로는 간단한 과거 시제, 직접적인 발언, 형용사와 부사의 사용, 그리고 현재완료 시제의 사용이 있습니다. 이러한 문법 요소들을 통해 학습자들은 과거의 사건을 표현하고, 대화를 직접적으로 표현하며, 묘사를 풍부하게 하고, 과거의 행동이 현재에 어떤 영향을 미치는지 이해하는 능력을 향상시킬 수 있습니다.
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>🤖 AI로 생성된 영어 학습 자료 | English Study Platform</p>
+            <p>이 워크시트는 elementary 3학년 학습자를 위한 맞춤형 교육 자료입니다.</p>
+        </div>
+    </div>
+</body>
+</html>
