@@ -1,0 +1,1034 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>영어 쉐도잉 학습</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Taurus, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            max-width: 800px;
+            width: 100%;
+            text-align: center;
+            backdrop-filter: blur(10px);
+        }
+
+        .header {
+            margin-bottom: 30px;
+        }
+
+        .title {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #4a5568;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            font-size: 1.1rem;
+            color: #718096;
+            margin-bottom: 20px;
+        }
+
+        .name-input-section {
+            margin-bottom: 30px;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #4a5568;
+        }
+
+        .input-group input {
+            width: 100%;
+            max-width: 300px;
+            padding: 12px;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .input-group input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .start-button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .start-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .start-button:disabled {
+            background: #cbd5e0;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .learning-section {
+            display: none;
+        }
+
+        .passage-info {
+            background: #f7fafc;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 30px;
+            border: 2px solid #e2e8f0;
+        }
+
+        .passage-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #2d3748;
+            margin-bottom: 10px;
+        }
+
+        .progress-info {
+            font-size: 1rem;
+            color: #4a5568;
+            margin-bottom: 15px;
+        }
+
+        .sentence-container {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .sentence-text {
+            font-size: 1.4rem;
+            line-height: 1.8;
+            color: #2d3748;
+            margin-bottom: 20px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            border-left: 5px solid #667eea;
+        }
+
+        .audio-controls {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .audio-button {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background-color 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .audio-button:hover:not(:disabled) {
+            background: #5a67d8;
+        }
+
+        .audio-button:disabled {
+            background: #a0aec0;
+            cursor: not-allowed;
+        }
+
+        .speed-controls {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .speed-button {
+            background: #718096;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+
+        .speed-button.active {
+            background: #667eea;
+        }
+
+        .recording-section {
+            margin-top: 25px;
+        }
+
+        .record-button {
+            background: #e53e3e;
+            color: white;
+            border: none;
+            padding: 15px 25px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin: 0 auto 20px;
+            min-width: 200px;
+        }
+
+        .record-button:hover:not(:disabled) {
+            background: #c53030;
+            transform: scale(1.05);
+        }
+
+        .record-button:disabled {
+            background: #a0aec0;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .record-button.recording {
+            background: #38a169;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        .feedback-section {
+            margin-top: 25px;
+            display: none;
+        }
+
+        .accuracy-score {
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .accuracy-score.excellent {
+            color: #38a169;
+        }
+
+        .accuracy-score.good {
+            color: #3182ce;
+        }
+
+        .accuracy-score.fair {
+            color: #d69e2e;
+        }
+
+        .accuracy-score.poor {
+            color: #e53e3e;
+        }
+
+        .user-speech {
+            background: #f0f4f8;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            font-style: italic;
+            color: #4a5568;
+        }
+
+        .word-feedback {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            justify-content: center;
+            margin: 20px 0;
+        }
+
+        .word {
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-weight: 500;
+        }
+
+        .word.correct {
+            background: #c6f6d5;
+            color: #2f855a;
+        }
+
+        .word.incorrect {
+            background: #fed7d7;
+            color: #c53030;
+        }
+
+        .next-button {
+            background: #38a169;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            margin: 10px;
+        }
+
+        .next-button:hover {
+            background: #2f855a;
+        }
+
+        .retry-button {
+            background: #ed8936;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            margin: 10px;
+        }
+
+        .retry-button:hover {
+            background: #dd6b20;
+        }
+
+        .completion-section {
+            display: none;
+            text-align: center;
+        }
+
+        .completion-title {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #38a169;
+            margin-bottom: 20px;
+        }
+
+        .final-stats {
+            background: #f0fff4;
+            border: 2px solid #38a169;
+            border-radius: 15px;
+            padding: 25px;
+            margin: 20px 0;
+        }
+
+        .stats-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid #c6f6d5;
+        }
+
+        .stats-item:last-child {
+            border-bottom: none;
+        }
+
+        .stats-label {
+            font-weight: 600;
+            color: #2f855a;
+        }
+
+        .stats-value {
+            font-weight: bold;
+            color: #1a202c;
+        }
+
+        .restart-button {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        .restart-button:hover {
+            background: #5a67d8;
+        }
+
+        .error-message {
+            background: #fed7d7;
+            color: #c53030;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 10px 0;
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+                margin: 10px;
+            }
+            
+            .title {
+                font-size: 2rem;
+            }
+            
+            .sentence-text {
+                font-size: 1.2rem;
+            }
+            
+            .audio-controls {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 이름 입력 섹션 -->
+        <div class="name-input-section" id="nameInputSection">
+            <div class="header">
+                <h1 class="title">🎯 영어 쉐도잉 학습</h1>
+                <p class="subtitle">선택된 문장 쉐도잉</p>
+                <p class="subtitle">문장별 발음 연습으로 영어 실력을 향상시키세요</p>
+            </div>
+
+            <div class="input-group">
+                <label for="userName">학습자 이름</label>
+                <input type="text" id="userName" placeholder="이름을 입력하세요" />
+            </div>
+
+            <button class="start-button" onclick="startLearning()">학습 시작하기</button>
+        </div>
+
+        <!-- 학습 섹션 -->
+        <div class="learning-section" id="learningSection">
+            <div class="passage-info">
+                <div class="passage-title">선택된 문장 쉐도잉</div>
+                <div class="progress-info">
+                    <span id="currentSentence">1</span> / <span id="totalSentences">3</span> 문장
+                </div>
+            </div>
+
+            <div class="sentence-container">
+                <div class="sentence-text" id="sentenceText">
+                    Today, I will tell you about my favorite hobby
+                </div>
+
+                <div class="audio-controls">
+                    <button class="audio-button" id="playButton" onclick="playAudio()">
+                        🔊 재생
+                    </button>
+                    <div class="speed-controls">
+                        <span>속도:</span>
+                        <button class="speed-button" onclick="setSpeed(0.75)">0.75x</button>
+                        <button class="speed-button active" onclick="setSpeed(1.0)">1.0x</button>
+                        <button class="speed-button" onclick="setSpeed(1.25)">1.25x</button>
+                    </div>
+                </div>
+
+                <div class="recording-section">
+                    <button class="record-button" id="recordButton" onclick="toggleRecording()">
+                        🎤 녹음 시작
+                    </button>
+                    
+                    <div class="error-message" id="errorMessage"></div>
+                </div>
+
+                <div class="feedback-section" id="feedbackSection">
+                    <div class="accuracy-score" id="accuracyScore">85%</div>
+                    
+                    <div class="user-speech-container">
+                        <strong>인식된 음성:</strong>
+                        <div class="user-speech" id="userSpeech"></div>
+                    </div>
+
+                    <div class="word-feedback" id="wordFeedback"></div>
+
+                    <div>
+                        <button class="next-button" id="nextButton" onclick="nextSentence()" style="display: none;">
+                            다음 문장
+                        </button>
+                        <button class="retry-button" onclick="retrySentence()">
+                            다시 시도
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 완료 섹션 -->
+        <div class="completion-section" id="completionSection">
+            <div class="completion-title">🎉 학습 완료!</div>
+            
+            <div class="final-stats">
+                <div class="stats-item">
+                    <span class="stats-label">총 문장 수</span>
+                    <span class="stats-value" id="finalTotalSentences">0</span>
+                </div>
+                <div class="stats-item">
+                    <span class="stats-label">통과한 문장</span>
+                    <span class="stats-value" id="finalPassedSentences">0</span>
+                </div>
+                <div class="stats-item">
+                    <span class="stats-label">평균 정확도</span>
+                    <span class="stats-value" id="finalAverageAccuracy">0%</span>
+                </div>
+                <div class="stats-item">
+                    <span class="stats-label">학습 시간</span>
+                    <span class="stats-value" id="finalLearningTime">0분</span>
+                </div>
+            </div>
+
+            <button class="restart-button" onclick="restartLearning()">
+                다시 학습하기
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // 전역 변수
+        let currentSentenceIndex = 0;
+        let sentences = ["Today, I will tell you about my favorite hobby","I love painting","Painting makes me happy"];
+        let passageTitle = "선택된 문장 쉐도잉";
+        let isRecording = false;
+        let recognition = null;
+        let speechSynthesis = window.speechSynthesis;
+        let currentUtterance = null;
+        let playbackSpeed = 1.0;
+        let learningStartTime = null;
+        let sentenceScores = [];
+        let passedSentences = 0;
+
+        // LearningLogger 클래스
+        class LearningLogger {
+            constructor(options = {}) {
+                this.webAppUrl = options.webAppUrl || 'https://script.google.com/macros/s/AKfycbx7zlKeokSY6WQdFVNRQuQIjzfNy6GXeUqWRv3k2VkvFp-GgS08PR1-ScbFv_-HLpHtRw/exec';
+                this.sheetId = options.sheetId || this.extractSheetId(options.sheetUrl);
+                this.isEnabled = options.isEnabled !== false;
+                
+                this.sessionData = {
+                    studentName: '',
+                    sessionStartTime: null,
+                    totalLearningTime: 0,
+                    correctAnswers: 0,
+                    wrongAnswers: 0,
+                    skippedAnswers: 0,
+                    hintsUsed: false,
+                    additionalData: {},
+                    logTime: null
+                };
+            }
+
+            extractSheetId(url) {
+                if (!url) return null;
+                const match = url.match(/\/spreadsheets\/d\/([a-zA-Z0-9-_]+)/);
+                return match ? match[1] : null;
+            }
+
+            startSession(studentName, additionalData = {}) {
+                this.sessionData.studentName = studentName;
+                this.sessionData.sessionStartTime = new Date();
+                this.sessionData.additionalData = { ...additionalData };
+                console.log('📚 학습 세션 시작:', studentName);
+            }
+
+            recordCorrectAnswer() { this.sessionData.correctAnswers++; }
+            recordWrongAnswer() { this.sessionData.wrongAnswers++; }
+            recordSkippedAnswer() { this.sessionData.skippedAnswers++; }
+            recordHintUsed() { this.sessionData.hintsUsed = true; }
+            setAdditionalData(key, value) { this.sessionData.additionalData[key] = value; }
+
+            calculateLearningTime() {
+                if (!this.sessionData.sessionStartTime) return 0;
+                const endTime = new Date();
+                return Math.round((endTime - this.sessionData.sessionStartTime) / 1000);
+            }
+
+            async endSession(additionalSessionData = {}) {
+                if (!this.isEnabled || !this.sheetId) {
+                    console.log('📝 로그 기록이 비활성화되어 있습니다.');
+                    return { success: true, message: '로그 기록 비활성화' };
+                }
+
+                this.sessionData.totalLearningTime = this.calculateLearningTime();
+                this.sessionData.logTime = new Date();
+                this.sessionData.additionalData = { ...this.sessionData.additionalData, ...additionalSessionData };
+
+                const totalSeconds = this.sessionData.totalLearningTime;
+                const minutes = Math.floor(totalSeconds / 60);
+                const seconds = totalSeconds % 60;
+                const formattedTime = `${minutes}분 ${seconds}초`;
+
+                const logData = {
+                    menu: 'learning_log',
+                    sheetId: this.sheetId,
+                    기능명: '쉐도잉 학습',
+                    학생이름: this.sessionData.studentName,
+                    접속시간: this.sessionData.sessionStartTime?.toLocaleString('ko-KR') || '',
+                    학습시간: formattedTime,
+                    정오답정보: `정답:${this.sessionData.correctAnswers}, 오답:${this.sessionData.wrongAnswers}, 스킵:${this.sessionData.skippedAnswers}`,
+                    힌트사용여부: this.sessionData.hintsUsed,
+                    부가정보: JSON.stringify(this.sessionData.additionalData),
+                    기록시간: this.sessionData.logTime.toLocaleString('ko-KR')
+                };
+
+                try {
+                    const response = await fetch(this.webAppUrl, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                        body: new URLSearchParams(logData).toString()
+                    });
+
+                    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+                    
+                    const result = await response.json();
+                    if (!result.success) throw new Error(result.error || '로그 저장 실패');
+
+                    console.log('✅ 로그 전송 완료');
+                    return { success: true, message: '로그가 구글 시트에 저장되었습니다.' };
+                    
+                } catch (error) {
+                    console.error('❌ 로그 전송 실패:', error);
+                    return { success: false, error: error.message };
+                }
+            }
+
+            resetSession() {
+                this.sessionData = {
+                    studentName: '',
+                    sessionStartTime: null,
+                    totalLearningTime: 0,
+                    correctAnswers: 0,
+                    wrongAnswers: 0,
+                    skippedAnswers: 0,
+                    hintsUsed: false,
+                    additionalData: {},
+                    logTime: null
+                };
+            }
+        }
+
+        // 학습 로그 관련
+        const SHEET_URL = "https://docs.google.com/spreadsheets/d/1cdlLcI6MeTlPDUbyjoZ5KLXPQGgZ6PIfkgWiXJNYlqc/edit?usp=sharing";
+        const WEBAPP_URL = "https://script.google.com/macros/s/AKfycbzGsSwQHKbVxqzDi9fgv93JNm8wEsvKtZZmEqwpGSL4B4Mu67SMjniRMvXHOfh3DdWg/exec";
+        const learningLogger = new LearningLogger({
+            sheetUrl: SHEET_URL,
+            webAppUrl: WEBAPP_URL,
+            isEnabled: true  // 일단 활성화하고 LearningLogger 내부에서 판단
+        });
+        
+        // 디버그 정보 출력  
+        console.log('🔍 쉐도잉 로그 설정:', {
+            sheetUrl: SHEET_URL,
+            webAppUrl: WEBAPP_URL,
+            isTemplate: SHEET_URL === "https://docs.google.com/spreadsheets/d/1cdlLcI6MeTlPDUbyjoZ5KLXPQGgZ6PIfkgWiXJNYlqc/edit?usp=sharing",
+            isEmpty: SHEET_URL.trim() === "",
+            extractedSheetId: learningLogger.sheetId,
+            loggerIsEnabled: learningLogger.isEnabled,
+            loggerWebAppUrl: learningLogger.webAppUrl,
+            hasValidSheetId: !!learningLogger.sheetId,
+            hasValidWebAppUrl: !!learningLogger.webAppUrl
+        });
+
+        // 페이지 로드 시 초기화
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeSpeechRecognition();
+            updateDisplay();
+        });
+
+        function startLearning() {
+            const userName = document.getElementById('userName').value.trim();
+            if (!userName) {
+                alert('이름을 입력해주세요.');
+                return;
+            }
+
+            learningStartTime = new Date();
+            document.getElementById('nameInputSection').style.display = 'none';
+            document.getElementById('learningSection').style.display = 'block';
+            
+            // 학습 세션 시작
+            learningLogger.startSession(userName, {
+                passageTitle: passageTitle,
+                totalSentences: sentences.length,
+                learningType: '쉐도잉'
+            });
+
+            updateDisplay();
+        }
+
+        function initializeSpeechRecognition() {
+            if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+                const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+                recognition = new SpeechRecognition();
+                
+                recognition.continuous = false;
+                recognition.interimResults = false;
+                recognition.lang = 'en-US';
+                recognition.maxAlternatives = 1;
+
+                recognition.onstart = function() {
+                    console.log('Speech recognition started');
+                };
+
+                recognition.onresult = function(event) {
+                    const result = event.results[0][0].transcript;
+                    console.log('Speech recognition result:', result);
+                    processSpeechResult(result);
+                };
+
+                recognition.onerror = function(event) {
+                    console.error('Speech recognition error:', event.error);
+                    showError('음성 인식 중 오류가 발생했습니다: ' + event.error);
+                    stopRecording();
+                };
+
+                recognition.onend = function() {
+                    stopRecording();
+                };
+            } else {
+                showError('이 브라우저는 음성 인식을 지원하지 않습니다.');
+            }
+        }
+
+        function updateDisplay() {
+            if (currentSentenceIndex >= sentences.length) {
+                showCompletion();
+                return;
+            }
+
+            document.getElementById('currentSentence').textContent = currentSentenceIndex + 1;
+            document.getElementById('totalSentences').textContent = sentences.length;
+            document.getElementById('sentenceText').textContent = sentences[currentSentenceIndex];
+            
+            // 피드백 섹션 숨기기
+            document.getElementById('feedbackSection').style.display = 'none';
+        }
+
+        function playAudio() {
+            if (currentUtterance) {
+                speechSynthesis.cancel();
+            }
+
+            const text = sentences[currentSentenceIndex];
+            currentUtterance = new SpeechSynthesisUtterance(text);
+            
+            // 영어 음성 설정
+            const voices = speechSynthesis.getVoices();
+            const englishVoice = voices.find(voice => 
+                voice.lang.includes('en') && voice.name.includes('Google')
+            ) || voices.find(voice => voice.lang.includes('en'));
+            
+            if (englishVoice) {
+                currentUtterance.voice = englishVoice;
+            }
+            
+            currentUtterance.rate = playbackSpeed;
+            currentUtterance.pitch = 1;
+            currentUtterance.volume = 1;
+
+            speechSynthesis.speak(currentUtterance);
+        }
+
+        function setSpeed(speed) {
+            playbackSpeed = speed;
+            
+            // 속도 버튼 활성화 상태 업데이트
+            document.querySelectorAll('.speed-button').forEach(button => {
+                button.classList.remove('active');
+            });
+            event.target.classList.add('active');
+        }
+
+        function toggleRecording() {
+            if (!recognition) {
+                showError('음성 인식이 지원되지 않습니다.');
+                return;
+            }
+
+            if (isRecording) {
+                stopRecording();
+            } else {
+                startRecording();
+            }
+        }
+
+        function startRecording() {
+            isRecording = true;
+            const recordButton = document.getElementById('recordButton');
+            recordButton.textContent = '🔴 녹음 중...';
+            recordButton.classList.add('recording');
+            
+            hideError();
+            recognition.start();
+        }
+
+        function stopRecording() {
+            isRecording = false;
+            const recordButton = document.getElementById('recordButton');
+            recordButton.textContent = '🎤 녹음 시작';
+            recordButton.classList.remove('recording');
+            
+            if (recognition) {
+                recognition.stop();
+            }
+        }
+
+        function processSpeechResult(userSpeech) {
+            const originalSentence = sentences[currentSentenceIndex];
+            const accuracy = calculateAccuracy(originalSentence, userSpeech);
+            
+            // 사용자 발음 표시
+            document.getElementById('userSpeech').textContent = userSpeech;
+            
+            // 정확도 표시
+            const accuracyElement = document.getElementById('accuracyScore');
+            accuracyElement.textContent = Math.round(accuracy) + '%';
+            
+            // 정확도에 따른 클래스 설정
+            accuracyElement.className = 'accuracy-score';
+            if (accuracy >= 90) {
+                accuracyElement.classList.add('excellent');
+            } else if (accuracy >= 75) {
+                accuracyElement.classList.add('good');
+            } else if (accuracy >= 60) {
+                accuracyElement.classList.add('fair');
+            } else {
+                accuracyElement.classList.add('poor');
+            }
+            
+            // 단어별 피드백 표시
+            showWordFeedback(originalSentence, userSpeech);
+            
+            // 점수 기록
+            sentenceScores.push(accuracy);
+            
+            // 70% 이상이면 통과
+            const isPassed = accuracy >= 70;
+            if (isPassed) {
+                passedSentences++;
+                document.getElementById('nextButton').style.display = 'inline-block';
+                learningLogger.recordCorrectAnswer();
+            } else {
+                learningLogger.recordWrongAnswer();
+            }
+            
+            // 피드백 섹션 표시
+            document.getElementById('feedbackSection').style.display = 'block';
+            
+            // 추가 데이터 설정 - 더 상세한 정보
+            learningLogger.setAdditionalData('sentence_' + (currentSentenceIndex + 1), {
+                sentenceNumber: currentSentenceIndex + 1,
+                originalText: originalSentence,
+                userSpeech: userSpeech,
+                accuracy: Math.round(accuracy),
+                passed: isPassed,
+                attempts: 1, // 첫 시도로 기록
+                timestamp: new Date().toLocaleString('ko-KR')
+            });
+        }
+
+        function calculateAccuracy(original, spoken) {
+            // 단어 단위로 분리하여 비교
+            const originalWords = original.toLowerCase().replace(/[^\w\s]/g, '').split(/\s+/).filter(w => w.length > 0);
+            const spokenWords = spoken.toLowerCase().replace(/[^\w\s]/g, '').split(/\s+/).filter(w => w.length > 0);
+            
+            // Levenshtein Distance를 이용한 유사도 계산
+            const maxLength = Math.max(originalWords.length, spokenWords.length);
+            if (maxLength === 0) return 100;
+            
+            const distance = levenshteinDistance(originalWords, spokenWords);
+            const similarity = Math.max(0, (maxLength - distance) / maxLength);
+            
+            return similarity * 100;
+        }
+
+        function levenshteinDistance(arr1, arr2) {
+            const matrix = Array(arr2.length + 1).fill(null).map(() =>
+                Array(arr1.length + 1).fill(null)
+            );
+
+            for (let i = 0; i <= arr1.length; i++) {
+                matrix[0][i] = i;
+            }
+
+            for (let j = 0; j <= arr2.length; j++) {
+                matrix[j][0] = j;
+            }
+
+            for (let j = 1; j <= arr2.length; j++) {
+                for (let i = 1; i <= arr1.length; i++) {
+                    const indicator = arr1[i - 1] === arr2[j - 1] ? 0 : 1;
+                    matrix[j][i] = Math.min(
+                        matrix[j][i - 1] + 1,
+                        matrix[j - 1][i] + 1,
+                        matrix[j - 1][i - 1] + indicator
+                    );
+                }
+            }
+
+            return matrix[arr2.length][arr1.length];
+        }
+
+        function showWordFeedback(original, spoken) {
+            const originalWords = original.toLowerCase().replace(/[^\w\s]/g, '').split(/\s+/).filter(w => w.length > 0);
+            const spokenWords = spoken.toLowerCase().replace(/[^\w\s]/g, '').split(/\s+/).filter(w => w.length > 0);
+            
+            const feedbackContainer = document.getElementById('wordFeedback');
+            feedbackContainer.innerHTML = '';
+            
+            const maxLength = Math.max(originalWords.length, spokenWords.length);
+            
+            for (let i = 0; i < maxLength; i++) {
+                const originalWord = originalWords[i] || '';
+                const spokenWord = spokenWords[i] || '';
+                const isCorrect = originalWord === spokenWord;
+                
+                const wordElement = document.createElement('span');
+                wordElement.className = `word ${isCorrect ? 'correct' : 'incorrect'}`;
+                wordElement.textContent = originalWord || `[${spokenWord}]`;
+                
+                feedbackContainer.appendChild(wordElement);
+            }
+        }
+
+        function nextSentence() {
+            currentSentenceIndex++;
+            updateDisplay();
+        }
+
+        function retrySentence() {
+            document.getElementById('feedbackSection').style.display = 'none';
+        }
+
+        async function showCompletion() {
+            document.getElementById('learningSection').style.display = 'none';
+            document.getElementById('completionSection').style.display = 'block';
+            
+            // 최종 통계 계산
+            const totalSentences = sentences.length;
+            const averageAccuracy = sentenceScores.length > 0 
+                ? sentenceScores.reduce((a, b) => a + b, 0) / sentenceScores.length 
+                : 0;
+            const learningTime = learningStartTime 
+                ? Math.round((new Date() - learningStartTime) / 1000 / 60)
+                : 0;
+            
+            // 최종 결과 표시
+            document.getElementById('finalTotalSentences').textContent = totalSentences;
+            document.getElementById('finalPassedSentences').textContent = passedSentences;
+            document.getElementById('finalAverageAccuracy').textContent = Math.round(averageAccuracy) + '%';
+            document.getElementById('finalLearningTime').textContent = learningTime + '분';
+            
+            // 최종 학습 데이터 설정 및 세션 종료
+            learningLogger.setAdditionalData('finalResults', {
+                totalSentences: totalSentences,
+                passedSentences: passedSentences,
+                failedSentences: totalSentences - passedSentences,
+                averageAccuracy: Math.round(averageAccuracy),
+                sentenceScores: sentenceScores,
+                completionTime: new Date().toLocaleString('ko-KR'),
+                passRate: Math.round((passedSentences / totalSentences) * 100)
+            });
+            
+            // 학습한 문장들 요약 추가
+            const practicedSentences = [];
+            for (let i = 0; i < sentences.length; i++) {
+                const sentenceData = learningLogger.sessionData.additionalData['sentence_' + (i + 1)];
+                if (sentenceData) {
+                    practicedSentences.push({
+                        number: i + 1,
+                        original: sentences[i],
+                        userSpeech: sentenceData.userSpeech || '',
+                        accuracy: sentenceData.accuracy || 0,
+                        passed: sentenceData.passed || false
+                    });
+                }
+            }
+            learningLogger.setAdditionalData('practicedSentences', practicedSentences);
+            
+            try {
+                const result = await learningLogger.endSession();
+                if (result.success) {
+                    console.log('학습 로그가 저장되었습니다.');
+                } else {
+                    console.warn('학습 로그 저장 실패:', result.error);
+                }
+            } catch (error) {
+                console.error('학습 로그 저장 중 오류:', error);
+            }
+        }
+
+        function restartLearning() {
+            // 초기화
+            currentSentenceIndex = 0;
+            sentenceScores = [];
+            passedSentences = 0;
+            learningStartTime = null;
+            
+            // 섹션 표시 변경
+            document.getElementById('completionSection').style.display = 'none';
+            document.getElementById('nameInputSection').style.display = 'block';
+            
+            // 입력 필드 초기화
+            document.getElementById('userName').value = '';
+        }
+
+        function showError(message) {
+            const errorElement = document.getElementById('errorMessage');
+            errorElement.textContent = message;
+            errorElement.style.display = 'block';
+        }
+
+        function hideError() {
+            document.getElementById('errorMessage').style.display = 'none';
+        }
+
+        // 음성 합성 음성 로드 대기
+        if (speechSynthesis.onvoiceschanged !== undefined) {
+            speechSynthesis.onvoiceschanged = function() {
+                console.log('Voices loaded');
+            };
+        }
+    </script>
+</body>
+</html>
