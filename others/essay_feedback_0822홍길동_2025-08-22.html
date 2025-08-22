@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>에세이 채점 결과 - 0822홍길동</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; 
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
+            min-height: 100vh; 
+            padding: 20px; 
+        }
+        .container { 
+            background: white; 
+            border-radius: 20px; 
+            padding: 40px; 
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1); 
+            max-width: 800px; 
+            margin: 0 auto; 
+        }
+        .header { 
+            text-align: center; 
+            margin-bottom: 40px; 
+            padding-bottom: 20px; 
+            border-bottom: 2px solid #e1e5e9; 
+        }
+        .title { 
+            color: #333; 
+            font-size: 28px; 
+            font-weight: bold; 
+            margin-bottom: 10px; 
+        }
+        .subtitle { 
+            color: #666; 
+            font-size: 16px; 
+        }
+        .student-info { 
+            background: #f8f9fa; 
+            padding: 20px; 
+            border-radius: 10px; 
+            margin-bottom: 30px; 
+        }
+        .student-info h3 { 
+            color: #333; 
+            margin-bottom: 15px; 
+        }
+        .info-row { 
+            display: flex; 
+            flex-wrap: wrap; 
+            gap: 30px; 
+            margin-bottom: 10px; 
+        }
+        .info-item { 
+            display: flex; 
+            align-items: center; 
+            gap: 8px; 
+        }
+        .info-label { 
+            font-weight: bold; 
+            color: #666; 
+            white-space: nowrap; 
+        }
+        .info-value { 
+            color: #333; 
+        }
+        .score-overview { 
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); 
+            color: white; 
+            padding: 30px; 
+            border-radius: 15px; 
+            text-align: center; 
+            margin-bottom: 30px; 
+        }
+        .total-score { 
+            font-size: 48px; 
+            font-weight: bold; 
+            margin-bottom: 10px; 
+        }
+        .grade { 
+            font-size: 24px; 
+            margin-bottom: 10px; 
+        }
+        .accuracy { 
+            font-size: 16px; 
+            opacity: 0.9; 
+        }
+        .scores-grid { 
+            display: grid; 
+            grid-template-columns: repeat(4, 1fr); 
+            gap: 20px; 
+            margin-bottom: 30px; 
+        }
+        .score-card { 
+            background: white; 
+            border: 2px solid #e1e5e9; 
+            border-radius: 10px; 
+            padding: 20px; 
+            text-align: center; 
+        }
+        .score-card.excellent { border-color: #4CAF50; background: #e8f5e8; }
+        .score-card.good { border-color: #FFC107; background: #fff8e1; }
+        .score-card.needs-improvement { border-color: #FF5722; background: #ffeaea; }
+        .score-title { 
+            font-size: 14px; 
+            color: #666; 
+            margin-bottom: 10px; 
+        }
+        .score-value { 
+            font-size: 24px; 
+            font-weight: bold; 
+            margin-bottom: 5px; 
+        }
+        .score-value.excellent { color: #4CAF50; }
+        .score-value.good { color: #FF9800; }
+        .score-value.needs-improvement { color: #f44336; }
+        .feedback-section { 
+            margin-bottom: 30px; 
+        }
+        .feedback-title { 
+            font-size: 18px; 
+            font-weight: bold; 
+            color: #333; 
+            margin-bottom: 15px; 
+            display: flex; 
+            align-items: center; 
+        }
+        .feedback-content { 
+            background: #f8f9fa; 
+            padding: 20px; 
+            border-radius: 10px; 
+            line-height: 1.6; 
+            color: #555; 
+        }
+        .essay-section { 
+            margin-bottom: 30px; 
+        }
+        .essay-content { 
+            background: #f8f9fa; 
+            padding: 20px; 
+            border-radius: 10px; 
+            line-height: 1.8; 
+            color: #333; 
+            white-space: pre-line; 
+            border-left: 4px solid #4facfe; 
+        }
+        .corrected-section { 
+            margin-bottom: 30px; 
+        }
+        .corrected-content { 
+            background: #e8f5e8; 
+            padding: 20px; 
+            border-radius: 10px; 
+            line-height: 1.8; 
+            color: #333; 
+            white-space: pre-line; 
+            border-left: 4px solid #4CAF50; 
+        }
+        .footer { 
+            text-align: center; 
+            padding-top: 20px; 
+            border-top: 2px solid #e1e5e9; 
+            color: #666; 
+            font-size: 14px; 
+        }
+        .modification-notice { 
+            background: #fff3cd; 
+            border: 1px solid #ffeaa7; 
+            padding: 15px; 
+            border-radius: 10px; 
+            margin-bottom: 20px; 
+            color: #856404; 
+        }
+        @media (max-width: 768px) { 
+            .container { padding: 20px; }
+            .total-score { font-size: 36px; }
+            .scores-grid { grid-template-columns: repeat(2, 1fr); gap: 15px; }
+            .info-row { flex-direction: column; gap: 10px; }
+            .info-item { justify-content: space-between; }
+        }
+        @media (max-width: 480px) {
+            .scores-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+            .score-card { padding: 15px; }
+            .score-title { font-size: 12px; }
+            .score-value { font-size: 20px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 헤더 -->
+        <div class="header">
+            <h1 class="title">📝 에세이 채점 결과</h1>
+            <p class="subtitle">AI 자동 채점 및 피드백 보고서</p>
+        </div>
+
+        <!-- 학생 정보 -->
+        <div class="student-info">
+            <h3>📋 학생 정보</h3>
+            <div class="info-row">
+                <div class="info-item">
+                    <span class="info-label">학생 이름:</span>
+                    <span class="info-value">0822홍길동</span>
+                </div>
+                <div class="info-item">
+       <span class="info-label">학교급:</span>
+       <span class="info-value">초등학교 3학년</span>
+     </div>
+            </div>
+            <div class="info-row">
+                <div class="info-item">
+       <span class="info-label">에세이 주제:</span>
+       <span class="info-value">우정</span>
+     </div>
+                <div class="info-item">
+                    <span class="info-label">채점 일시:</span>
+                    <span class="info-value">2025년 8월 22일 오전 11:01</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="modification-notice">
+       ⚠️ 이 채점 결과는 AI 초기 결과에서 교사가 수정한 내용이 포함되어 있습니다.
+     </div>
+
+        <!-- 총점 개요 -->
+        <div class="score-overview">
+            <div class="total-score">15/20</div>
+            <div class="grade">B+ 등급</div>
+            <div class="accuracy">정답률: 75%</div>
+        </div>
+
+        <!-- 세부 점수 -->
+        <div class="scores-grid">
+            
+      <div class="score-card good">
+          <div class="score-title">과제 완성도</div>
+          <div class="score-value good">3/5</div>
+      </div>
+    
+      <div class="score-card excellent">
+          <div class="score-title">내용</div>
+          <div class="score-value excellent">4/5</div>
+      </div>
+    
+      <div class="score-card excellent">
+          <div class="score-title">구성</div>
+          <div class="score-value excellent">4/5</div>
+      </div>
+    
+      <div class="score-card excellent">
+          <div class="score-title">언어 사용</div>
+          <div class="score-value excellent">4/5</div>
+      </div>
+    
+        </div>
+
+        <!-- 원본 에세이 -->
+        <div class="essay-section">
+            <div class="feedback-title">📄 원본 에세이</div>
+            <div class="essay-content">Once upon a time, in a big city, there lived a boy named Billy. He was kind and always full of fun. Billy had a cat named 'Blacky' because of its shiny black fur. Billy and Blacky were best friends; they always did everything together. 
+
+One sunny afternoon, Billy was reading a book about animals in his room. Suddenly, he heard a loud 'meow' from the garden. It was Blacky. He quickly ran outside to find Blacky with one of her legs stuck between the branches of a tree. Billy felt his heart pound and he began to cry. 
+
+But then, he remembered his dad's words, "A brave heart can overcome any problem." Billy dried his tears, took a deep breath and thought about what to do. He went to the kitchen, grabbed a chair, and carried it to the garden. Standing on the chair, he could reach Blacky and gently freed her leg. 
+
+Blacky was no longer stuck, but she was still in pain. Billy knew he had to help his friend. He carefully picked her up and carried her to the vet's office across the street. The doctor checked Blacky's leg and gave her medicine. After a few days, Blacky was back to her playful self again.
+
+Billy felt happy. He learned that friendship is not just about having fun together, but also about helping each other in times of need. From then on, Billy and Blacky's bond grew even stronger. They were not just a boy and his cat anymore, they were a team. And together, they knew they could overcome any obstacle that came their way.
+
+So, always remember, a true friend is someone who is there for you, not only in good times but also in bad times. That's what real friendship is about. And that's what Billy and Blacky taught us.</div>
+        </div>
+
+        <!-- 상세 피드백 -->
+        
+    <div class="feedback-section">
+        <div class="feedback-title">📋 과제 완성도 피드백</div>
+        <div class="feedback-content">주제를 잘 이해하고 요구사항을 충족했습니다. 우정의 의미를 잘 전달하고, 이야기 형식으로 풀어내어 흥미를 유도했습니다.</div>
+    </div>
+  
+    <div class="feedback-section">
+        <div class="feedback-title">💡 내용 피드백</div>
+        <div class="feedback-content">내용이 흥미롭고 관련성이 높습니다. 그러나 우정의 깊이에 대한 더 많은 설명이나 예시가 추가되면 더욱 좋을 것 같습니다.</div>
+    </div>
+  
+    <div class="feedback-section">
+        <div class="feedback-title">🏗️ 구성 피드백</div>
+        <div class="feedback-content">전반적으로 논리적인 흐름이 잘 유지되었습니다. 하지만 각 문단 간의 전환이 조금 더 매끄럽게 이루어지면 좋겠습니다.</div>
+    </div>
+  
+    <div class="feedback-section">
+        <div class="feedback-title">🔤 언어 사용 피드백</div>
+        <div class="feedback-content">문법과 어휘 사용이 전반적으로 좋습니다. 몇 가지 문장 구조가 더 다양해지면 글이 더욱 풍부해질 것입니다.</div>
+    </div>
+  
+
+        <!-- 종합 평가 -->
+        <div class="feedback-section">
+            <div class="feedback-title">📝 종합 평가</div>
+            <div class="feedback-content">전반적으로 잘 쓴 에세이입니다! 이야기의 구성과 주제 전달이 뛰어나며, 친구를 돕는 것의 중요성을 잘 표현했습니다. 앞으로는 더 다양한 표현과 문장 구조를 사용해보면 좋겠습니다. 계속해서 좋은 글을 써주세요!</div>
+        </div>
+
+        <!-- 수정된 버전 -->
+        <div class="corrected-section">
+       <div class="feedback-title">✏️ 수정된 버전</div>
+       <div class="corrected-content">Once upon a time, in a big city, there lived a boy named Billy. He was kind and always full of fun. Billy had a cat named 'Blacky' because of her shiny black fur. Billy and Blacky were best friends; they always did everything together.
+
+One sunny afternoon, Billy was reading a book about animals in his room. Suddenly, he heard a loud 'meow' from the garden. It was Blacky. He quickly ran outside to find Blacky with one of her legs stuck between the branches of a tree. Billy felt his heart pound, and he began to cry.
+
+But then, he remembered his dad's words, "A brave heart can overcome any problem." Billy dried his tears, took a deep breath, and thought about what to do. He went to the kitchen, grabbed a chair, and carried it to the garden. Standing on the chair, he could reach Blacky and gently freed her leg.
+
+Blacky was no longer stuck, but she was still in pain. Billy knew he had to help his friend. He carefully picked her up and carried her to the vet's office across the street. The doctor checked Blacky's leg and gave her medicine. After a few days, Blacky was back to her playful self again.
+
+Billy felt happy. He learned that friendship is not just about having fun together, but also about helping each other in times of need. From then on, Billy and Blacky's bond grew even stronger. They were not just a boy and his cat anymore; they were a team. Together, they knew they could overcome any obstacle that came their way.
+
+So, always remember, a true friend is someone who is there for you, not only in good times but also in bad times. That's what real friendship is about, and that's what Billy and Blacky taught us.</div>
+     </div>
+
+        <!-- 푸터 -->
+        <div class="footer">
+            <p>🤖 AI 자동 채점 시스템으로 생성된 결과입니다.</p>
+            <p>문의사항이 있으시면 담당 교사에게 연락해주세요.</p>
+        </div>
+    </div>
+</body>
+</html>
